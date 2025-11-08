@@ -60,15 +60,21 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="relative lg:h-[600px] h-[400px]"
+            className="relative lg:h-[600px] h-[400px] flex items-center justify-center"
           >
-            <Image
-              src="/modern-tech-workspace-with-code-and-automation-too.jpg"
-              alt="VoroLabs Technology"
-              fill
-              className="object-contain"
-              priority
-            />
+            <div className="relative w-full max-w-[500px] aspect-square">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 blur-3xl" />
+              <div className="relative w-full h-full rounded-full overflow-hidden border border-primary/20">
+                <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-background/80" />
+                <Image
+                  src="/modern-tech-workspace-with-code-and-automation-too.jpg"
+                  alt="VoroLabs Technology"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>

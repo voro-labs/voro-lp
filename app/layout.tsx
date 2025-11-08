@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "VoroLabs - Soluções Digitais Sob Medida",
   description: "Desenvolvemos sistemas, páginas e automações que conectam você aos seus clientes",
-  generator: "v0.app",
+  generator: "vorolabs.app",
   icons: {
     icon: [
       {
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
         media: "(prefers-color-scheme: dark)",
       },
       {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: "/icon.png",
+        type: "image/png",
       },
     ],
     apple: "/apple-icon.png",
