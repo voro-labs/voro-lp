@@ -11,8 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, Mail, MessageCircle, Send } from "lucide-react"
 import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
 import { useLandingPageContact } from "@/hooks/use-landing-page-contact.hook"
-import { Loading } from "./loading/loading.component"
 import { LandingPageContactDto } from "@/types/DTOs/landingPageContactDto.interface"
+import { Spinner } from "./loading/spinner.component"
 
 export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined }) {
   const { postLandingPageContact, loading, error, clearError } = useLandingPageContact();
@@ -112,7 +112,7 @@ export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefi
               <CardContent>
                 {loading && (
                   <div className="flex justify-center items-center h-64">
-                    <Loading />
+                    <Spinner />
                   </div>
                 )}
 

@@ -8,7 +8,7 @@ import { Eye, EyeOff, AlertCircle } from "lucide-react"
 import { useAuth } from "@/contexts/auth.context"
 import { useSignIn } from "@/hooks/use-sign-in.hook"
 import { SignInDto } from "@/types/DTOs/signInDto.interface"
-import { Loading } from "@/components/loading/loading.component"
+import { LoadingSimple } from "@/components/loading/loading-simple.component"
 
 export default function SignInPage() {
   const router = useRouter()
@@ -74,11 +74,11 @@ export default function SignInPage() {
   }
 
   if (user?.token) {
-    return <Loading />
+    return <LoadingSimple />
   }
 
   if (loading) {
-    return <Loading />
+    return <LoadingSimple />
   }
 
   return (

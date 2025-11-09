@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth.context"
 import { getAuthToken } from "@/lib/api"
 import { rolesAllowed } from "@/lib/allowed-utils"
-import { Loading } from "../loading/loading.component"
+import { LoadingSimple } from "../loading/loading-simple.component"
 
 interface AuthGuardProps {
   children: React.ReactNode
@@ -50,11 +50,11 @@ export function AuthGuard({ children, requiredRoles }: AuthGuardProps) {
   }, [user, loading, router, requiredRoles])
 
   if (loading) {
-    return <Loading />
+    return <LoadingSimple />
   }
 
   if (!getAuthToken()) {
-    return <Loading />
+    return <LoadingSimple />
   }
 
   return <>{children}</>

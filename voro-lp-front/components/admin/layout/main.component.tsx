@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { Loading } from "../../loading/loading.component"
+import { LoadingSimple } from "../../loading/loading-simple.component"
 import { useAuth } from "@/contexts/auth.context"
 import { routesAllowed } from "@/lib/allowed-utils"
 import { Navbar } from "./navbar.component"
@@ -21,14 +21,14 @@ export function Main({ children }: MainProps) {
   const pathname = usePathname()
 
   if (loading) {
-    return <Loading />
+    return <LoadingSimple />
   }
 
   if (!user?.token) {
     // Redirecionar para sign-in se não estiver na página inicial
     if (typeof window !== "undefined" && !routesAllowed.some(item => window.location.pathname.startsWith(item))) {
       router.push("/admin/sign-in")
-      return <Loading />
+      return <LoadingSimple />
     }
 
     // Layout público (não autenticado)

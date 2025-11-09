@@ -1,16 +1,12 @@
 "use client"
 
 import { useLandingPageConfig } from "@/hooks/use-landing-page-config.hook"
-import { Loading } from "../../loading/loading.component"
+import { Loading } from "@/components/loading/loading.component"
 import { AlertCircle } from "lucide-react"
 
 
 export default function Dashboard() {
   const { LandingPageConfig, loading, updateLandingPageConfig, error, clearError } = useLandingPageConfig("dashboard")
-
-  if (loading) {
-    return <Loading />
-  }
 
   if (error) {
     return (
@@ -31,7 +27,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      
+      <Loading isLoading={loading} />
     </div>
   )
 }

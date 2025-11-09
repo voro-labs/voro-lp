@@ -7,16 +7,13 @@ import { Process } from "@/components/process"
 import { About } from "@/components/about"
 import { Contact } from "@/components/contact"
 import { Footer } from "@/components/footer"
-import { Loading } from "@/components/loading/loading.component"
+
 import { AlertCircle } from "lucide-react"
 import { useLandingPageConfig } from "@/hooks/use-landing-page-config.hook"
+import { Loading } from "@/components/loading/loading.component"
 
 export default function HomePage() {
   const { LandingPageConfig, loading, error, clearError } = useLandingPageConfig("home")
-
-  if (loading) {
-    return <Loading />
-  }
 
   if (error) {
     return (
@@ -37,13 +34,48 @@ export default function HomePage() {
 
   return (
     <div>
-      <Navbar />
-      <Hero lpConfig={LandingPageConfig?.sections.find((section) => section.sectionType.toLocaleLowerCase() === "hero".toLocaleLowerCase())} />
-      <Services lpConfig={LandingPageConfig?.sections.find((section) => section.sectionType.toLocaleLowerCase() === "services".toLocaleLowerCase())} />
-      <Process lpConfig={LandingPageConfig?.sections.find((section) => section.sectionType.toLocaleLowerCase() === "process".toLocaleLowerCase())} />
-      <About lpConfig={LandingPageConfig?.sections.find((section) => section.sectionType.toLocaleLowerCase() === "about".toLocaleLowerCase())} />
-      <Contact lpConfig={LandingPageConfig?.sections.find((section) => section.sectionType.toLocaleLowerCase() === "contact".toLocaleLowerCase())} />
-      <Footer lpConfig={LandingPageConfig?.sections.find((section) => section.sectionType.toLocaleLowerCase() === "footer".toLocaleLowerCase())} />
+      <Loading isLoading={loading} />
+      {!loading && (
+        <>
+          <Navbar />
+          <Hero
+            lpConfig={LandingPageConfig?.sections.find(
+              (section) =>
+                section.sectionType.toLowerCase() === "hero"
+            )}
+          />
+          <Services
+            lpConfig={LandingPageConfig?.sections.find(
+              (section) =>
+                section.sectionType.toLowerCase() === "services"
+            )}
+          />
+          <Process
+            lpConfig={LandingPageConfig?.sections.find(
+              (section) =>
+                section.sectionType.toLowerCase() === "process"
+            )}
+          />
+          <About
+            lpConfig={LandingPageConfig?.sections.find(
+              (section) =>
+                section.sectionType.toLowerCase() === "about"
+            )}
+          />
+          <Contact
+            lpConfig={LandingPageConfig?.sections.find(
+              (section) =>
+                section.sectionType.toLowerCase() === "contact"
+            )}
+          />
+          <Footer
+            lpConfig={LandingPageConfig?.sections.find(
+              (section) =>
+                section.sectionType.toLowerCase() === "footer"
+            )}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useLandingPageConfig } from "@/hooks/use-landing-page-config.hook"
-import { Loading } from "../../loading/loading.component"
+import { LoadingSimple } from "../../loading/loading-simple.component"
 import { AlertCircle } from "lucide-react"
 
 
@@ -9,7 +9,7 @@ export default function Settings() {
   const { LandingPageConfig, loading, updateLandingPageConfig, error, clearError } = useLandingPageConfig("settings")
 
   if (loading) {
-    return <Loading />
+    return <LoadingSimple />
   }
 
   if (error) {
