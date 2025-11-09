@@ -1,0 +1,53 @@
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import "./globals.css"
+import { AuthProvider } from "@/contexts/auth.context"
+import { Main } from "@/components/admin/layout/main.component"
+
+const inter = Inter({ subsets: ["latin"] })
+
+export const metadata: Metadata = {
+  title: "VoroLabs - Soluções Digitais Sob Medida",
+  description: "Desenvolvemos sistemas, páginas e automações que conectam você aos seus clientes",
+  generator: "vorolabs.app",
+  icons: {
+    icon: [
+      {
+        url: "/icon-light-32x32.png",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/icon-dark-32x32.png",
+        media: "(prefers-color-scheme: dark)",
+      },
+      {
+        url: "/icon.png",
+        type: "image/png",
+      },
+    ],
+    apple: "/apple-icon.png",
+  },
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="pt-BR" className="dark scroll-smooth">
+      <body className={`${inter.className} font-sans antialiased`}>
+        <AuthProvider>
+          <Main>
+            {children}
+          </Main>
+        </AuthProvider>
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
+  )
+}

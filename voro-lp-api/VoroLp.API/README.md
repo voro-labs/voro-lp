@@ -1,0 +1,2 @@
+dotnet ef migrations add Initial --project VoroLp.Infrastructure --startup-project VoroLp.API --output-dir Migrations
+dotnet ef database update Initial --project VoroLp.Infrastructure --startup-project VoroLp.API

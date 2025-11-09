@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="VoroLp.API/VoroLp.API.csproj" />
+  <Project Path="VoroLp.Application/VoroLp.Application.csproj" />
+  <Project Path="VoroLp.Domain/VoroLp.Domain.csproj" />
+  <Project Path="VoroLp.Infrastructure/VoroLp.Infrastructure.csproj" />
+  <Project Path="VoroLp.Shared/VoroLp.Shared.csproj" Id="5c2730a9-2d3a-4329-8b91-4910993e8ce8" />
+</Solution>
