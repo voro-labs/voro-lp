@@ -3,6 +3,8 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
+import { AuthProvider } from "@/contexts/auth.context"
+import { Main } from "@/components/admin/layout/main.component"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -31,13 +33,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
     <html lang="pt-BR" className="dark scroll-smooth">
       <body className={`${inter.className} font-sans antialiased`}>
-        {children}
+        <AuthProvider>
+          <Main>
+            {children}
+          </Main>
+        </AuthProvider>
         <Analytics />
       </body>
     </html>

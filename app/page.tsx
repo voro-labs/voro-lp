@@ -6,9 +6,9 @@ import { About } from "@/components/about"
 import { Contact } from "@/components/contact"
 import { Footer } from "@/components/footer"
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="min-h-screen">
+    <div>
       <Navbar />
       <Hero />
       <Services />
@@ -16,6 +16,6 @@ export default function Home() {
       <About />
       <Contact />
       <Footer />
-    </main>
-  )
+    </div>
+  );
 }
