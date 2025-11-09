@@ -26,7 +26,7 @@ export default function SignInPage() {
   // Redirecionar se já estiver logado
   useEffect(() => {
     if (user?.token) {
-      router.push("/")
+      router.push("/admin/dashboard")
     }
   }, [user, router])
 

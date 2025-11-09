@@ -43,7 +43,7 @@ export function AuthGuard({ children, requiredRoles }: AuthGuardProps) {
         : false
 
       if (!hasRequiredRole && !hasAllowedRole) {
-        router.push("/") // Redireciona para dashboard padrão
+        router.push("/admin/dashboard") // Redireciona para dashboard padrão
         return
       }
     }
