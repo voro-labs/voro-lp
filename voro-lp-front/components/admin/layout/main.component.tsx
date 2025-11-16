@@ -55,7 +55,7 @@ export function Main({ children }: MainProps) {
 
         <div className="flex-1">
           <Navbar isOpen={isSidebarOpen} onMenuClick={() => setIsSidebarOpen(true)} />
-          <main className="p-6">{children}</main>
+          <main>{children}</main>
         </div>
       </div>
     </div>

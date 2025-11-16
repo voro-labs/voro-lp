@@ -2,12 +2,16 @@ import type { ResponseViewModel } from "@/types/response.interface"
 
 // Configurações centralizadas da API
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL,
+  BASE_URL: `${process.env.NEXT_PUBLIC_BASE_URL}/${process.env.NEXT_PUBLIC_API_URL}`,
   ENDPOINTS: {
     SIGNIN: "/auth/sign-in",
     RESET_PASSWORD: "/auth/reset-password",
     FORGOT_PASSWORD: "/auth/forgot-password",
-    LANDING_PAGE_CONFIG: "/landing-page-config"
+    LANDING_PAGE_CONFIG: "/landing-page-config",
+    CHAT: "/chat",
+    MESSAGE: "/message",
+    CONTACT: "/contact",
+    INSTANCE: "/instance"
   },
   HEADERS: {
     "Content-Type": "application/json",

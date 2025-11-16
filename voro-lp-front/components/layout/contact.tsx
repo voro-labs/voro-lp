@@ -12,7 +12,7 @@ import { AlertCircle, Mail, MessageCircle, Send } from "lucide-react"
 import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
 import { useLandingPageContact } from "@/hooks/use-landing-page-contact.hook"
 import { LandingPageContactDto } from "@/types/DTOs/landingPageContactDto.interface"
-import { Spinner } from "./loading/spinner.component"
+import { Spinner } from "../loading/spinner.component"
 
 export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined }) {
   const { postLandingPageContact, loading, error, clearError } = useLandingPageContact();

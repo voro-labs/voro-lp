@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using VoroLp.Domain.Entities.Evolution;
 using VoroLp.Domain.Entities.Identity;
 
 namespace VoroLp.Domain.Entities
@@ -8,5 +9,7 @@ namespace VoroLp.Domain.Entities
         [Key]
         public Guid UserId { get; set; }
         public User User { get; set; } = null!;
+
+        public ICollection<Instance> Instances { get; set; } = [];
     }
 }

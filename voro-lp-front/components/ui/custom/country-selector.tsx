@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { CountryDto } from "@/types/DTOs/countryDto.interface"
+import { flags } from "@/lib/flag-utils"
 
 interface CountrySelectorProps {
   value: string
@@ -9,68 +10,15 @@ interface CountrySelectorProps {
 }
 
 export function CountrySelector({ value, onChange }: CountrySelectorProps) {
-  const [countries] = useState<CountryDto[]>([
-    {
-      code: "BR",
-      name: "Brasil",
-      flagUrl: "https://flagcdn.com/w20/br.png",
-      dialCode: "+55",
-    },
-    {
-      code: "US",
-      name: "Estados Unidos",
-      flagUrl: "https://flagcdn.com/w20/us.png",
-      dialCode: "+1",
-    },
-    {
-      code: "GB",
-      name: "Reino Unido",
-      flagUrl: "https://flagcdn.com/w20/gb.png",
-      dialCode: "+44",
-    },
-    {
-      code: "CA",
-      name: "Canadá",
-      flagUrl: "https://flagcdn.com/w20/ca.png",
-      dialCode: "+1",
-    },
-    {
-      code: "AU",
-      name: "Austrália",
-      flagUrl: "https://flagcdn.com/w20/au.png",
-      dialCode: "+61",
-    },
-    {
-      code: "AR",
-      name: "Argentina",
-      flagUrl: "https://flagcdn.com/w20/ar.png",
-      dialCode: "+54",
-    },
-    {
-      code: "MX",
-      name: "México",
-      flagUrl: "https://flagcdn.com/w20/mx.png",
-      dialCode: "+52",
-    },
-    {
-      code: "FR",
-      name: "França",
-      flagUrl: "https://flagcdn.com/w20/fr.png",
-      dialCode: "+33",
-    },
-    {
-      code: "DE",
-      name: "Alemanha",
-      flagUrl: "https://flagcdn.com/w20/de.png",
-      dialCode: "+49",
-    },
-    {
-      code: "IT",
-      name: "Itália",
-      flagUrl: "https://flagcdn.com/w20/it.png",
-      dialCode: "+39",
-    },
-  ])
+  
+const [countries, setCountries] = useState<CountryDto[]>(
+  Object.entries(flags).map(([code, { name, flagUrl, dialCode }]) => ({
+      code,
+      name,
+      flagUrl,
+      dialCode,
+    }))
+  );
 
   const [selectedCountry, setSelectedCountry] = useState<CountryDto | null>(null)
 

@@ -1,6 +1,6 @@
 ﻿namespace VoroLp.Domain.Entities
 {
-    public class Contact
+    public class LandingPageContact
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

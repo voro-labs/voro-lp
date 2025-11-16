@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using VoroLp.Application.DTOs;
-using VoroLp.Application.DTOs.Identity;
 using VoroLp.Application.Services.Interfaces;
 using VoroLp.Domain.Entities.Identity;
 using VoroLp.Shared.Structs;
@@ -12,17 +11,21 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using VoroLp.Application.Services.Interfaces.Evolution;
 
 namespace VoroLp.Application.Services
 {
     public class AuthService(IMapper mapper, IOptions<CookieUtil> cookieUtil,
         SignInManager<User> signInManager, UserManager<User> userManager,
-        IConfiguration configuration, INotificationService notificationService) : IAuthService
+        IConfiguration configuration, INotificationService notificationService,
+        IContactService contactService, IGroupService groupService) : IAuthService
     {
+        private readonly INotificationService _notificationService = notificationService;
+        private readonly IContactService _contactService = contactService;
+        private readonly IGroupService _groupService = groupService;
         private readonly SignInManager<User> _signInManager = signInManager;
         private readonly UserManager<User> _userManager = userManager;
         private readonly CookieUtil _cookieUtil = cookieUtil.Value;
-        private readonly INotificationService _notificationService = notificationService;
         private readonly IMapper _mapper = mapper;
 
         public async Task<AuthDto> SignInAsync(SignInDto signInDto)
@@ -36,6 +39,10 @@ namespace VoroLp.Application.Services
 
             if (!result.Succeeded)
                 throw new UnauthorizedAccessException("Usuário ou senha inválidos.");
+
+            //await _contactService.SyncContactsAsync();
+
+            //await _groupService.SyncGroupsAsync();
 
             var rolesNames = await _userManager.GetRolesAsync(user);
 

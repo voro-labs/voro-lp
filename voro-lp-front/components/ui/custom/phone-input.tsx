@@ -5,9 +5,12 @@ import { applyMask, phoneMasks, removeMask } from "@/lib/mask-utils"
 import type React from "react"
 
 import { useState, useEffect } from "react"
+import { Input } from "../input"
 
 interface PhoneInputProps {
+  id: string
   value: string
+  autoComplete: string
   onChange: (value: string) => void
   onBlur?: () => void
   countryCode: string
@@ -15,7 +18,7 @@ interface PhoneInputProps {
   disabled?: boolean
 }
 
-export function PhoneInput({ value, onChange, onBlur, countryCode, placeholder, disabled }: PhoneInputProps) {
+export function PhoneInput({ id, value, autoComplete, onChange, onBlur, countryCode, placeholder, disabled }: PhoneInputProps) {
   const [maskedValue, setMaskedValue] = useState("")
 
   useEffect(() => {
@@ -49,12 +52,14 @@ export function PhoneInput({ value, onChange, onBlur, countryCode, placeholder, 
   const currentPlaceholder = placeholder || (currentMask ? currentMask.placeholder : "Número do telefone")
 
   return (
-    <input
+    <Input
+      id={id}
       type="text"
       value={maskedValue}
+      autoComplete={autoComplete}
       onChange={handleInputChange}
       onBlur={onBlur}
-      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="w-full px-3 py-2"
       placeholder={currentPlaceholder}
       disabled={disabled}
     />

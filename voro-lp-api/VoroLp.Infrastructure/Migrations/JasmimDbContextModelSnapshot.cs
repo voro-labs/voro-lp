@@ -110,34 +110,292 @@ namespace VoroLp.Infrastructure.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("VoroLp.Domain.Entities.Contact", b =>
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Chat", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Email")
+                    b.Property<Guid?>("ContactId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("InstanceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsGroup")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset>("LastMessageAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RemoteJid")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("IpAddress")
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("InstanceId");
+
+                    b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Contact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastKnownPresence")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("LastMessageAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("LastPresenceAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Number")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Message")
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RemoteJid")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset>("ReceiveDate")
+                    b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.ToTable("Contacts");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.ContactIdentifier", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ContactId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Jid")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("ContactIdentifier");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Group", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("LastMessageAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RemoteJid")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.GroupMember", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ContactId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("JoinedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("GroupMembers");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Instance", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UserExtensionUserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserExtensionUserId");
+
+                    b.ToTable("Instances");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ContactId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("DurationSeconds")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("FileLength")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("GroupId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("Height")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsFromMe")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MimeType")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("QuotedMessageId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("RawJson")
+                        .HasColumnType("text");
+
+                    b.Property<string>("RemoteFrom")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RemoteTo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("SentAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<byte[]>("Thumbnail")
+                        .HasColumnType("bytea");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("Width")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("QuotedMessageId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.MessageReaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ContactId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MessageId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Reaction")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.HasIndex("MessageId");
+
+                    b.ToTable("MessageReactions");
                 });
 
             modelBuilder.Entity("VoroLp.Domain.Entities.Identity.Role", b =>
@@ -298,6 +556,36 @@ namespace VoroLp.Infrastructure.Migrations
                     b.ToTable("LandingPageConfigs");
                 });
 
+            modelBuilder.Entity("VoroLp.Domain.Entities.LandingPageContact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("IpAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("ReceiveDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LandingPageContacts");
+                });
+
             modelBuilder.Entity("VoroLp.Domain.Entities.LandingPageSection", b =>
                 {
                     b.Property<Guid>("Id")
@@ -423,6 +711,112 @@ namespace VoroLp.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Chat", b =>
+                {
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Contact", "Contact")
+                        .WithMany()
+                        .HasForeignKey("ContactId");
+
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Instance", "Instance")
+                        .WithMany("Chats")
+                        .HasForeignKey("InstanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Instance");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.ContactIdentifier", b =>
+                {
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Contact", "Contact")
+                        .WithMany("Identifiers")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.GroupMember", b =>
+                {
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Contact", "Contact")
+                        .WithMany("GroupMemberships")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Group", "Group")
+                        .WithMany("Members")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Instance", b =>
+                {
+                    b.HasOne("VoroLp.Domain.Entities.UserExtension", null)
+                        .WithMany("Instances")
+                        .HasForeignKey("UserExtensionUserId");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Message", b =>
+                {
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Contact", "Contact")
+                        .WithMany("Messages")
+                        .HasForeignKey("ContactId");
+
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Group", "Group")
+                        .WithMany("Messages")
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Message", "QuotedMessage")
+                        .WithMany()
+                        .HasForeignKey("QuotedMessageId");
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("QuotedMessage");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.MessageReaction", b =>
+                {
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Contact", "Contact")
+                        .WithMany()
+                        .HasForeignKey("ContactId");
+
+                    b.HasOne("VoroLp.Domain.Entities.Evolution.Message", "Message")
+                        .WithMany("Reactions")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+
+                    b.Navigation("Message");
+                });
+
             modelBuilder.Entity("VoroLp.Domain.Entities.Identity.UserRole", b =>
                 {
                     b.HasOne("VoroLp.Domain.Entities.Identity.Role", "Role")
@@ -464,6 +858,37 @@ namespace VoroLp.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Chat", b =>
+                {
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Contact", b =>
+                {
+                    b.Navigation("GroupMemberships");
+
+                    b.Navigation("Identifiers");
+
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Group", b =>
+                {
+                    b.Navigation("Members");
+
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Instance", b =>
+                {
+                    b.Navigation("Chats");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.Evolution.Message", b =>
+                {
+                    b.Navigation("Reactions");
+                });
+
             modelBuilder.Entity("VoroLp.Domain.Entities.Identity.Role", b =>
                 {
                     b.Navigation("UserRoles");
@@ -480,6 +905,11 @@ namespace VoroLp.Infrastructure.Migrations
             modelBuilder.Entity("VoroLp.Domain.Entities.LandingPageConfig", b =>
                 {
                     b.Navigation("Sections");
+                });
+
+            modelBuilder.Entity("VoroLp.Domain.Entities.UserExtension", b =>
+                {
+                    b.Navigation("Instances");
                 });
 #pragma warning restore 612, 618
         }

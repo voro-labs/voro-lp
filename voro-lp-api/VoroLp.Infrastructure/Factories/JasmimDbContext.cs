@@ -3,6 +3,7 @@ using VoroLp.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using VoroLp.Domain.Entities.Evolution;
 
 namespace VoroLp.Infrastructure.Factories
 {
@@ -13,9 +14,16 @@ namespace VoroLp.Infrastructure.Factories
         // Expor explicitamente a entidade de junção
         //public DbSet<Exemplo> Exemplo { get; set; }
         public DbSet<UserExtension> UserExtensions { get; set; }
+        public DbSet<Instance> Instances { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<MessageReaction> MessageReactions { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<GroupMember> GroupMembers { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<LandingPageConfig> LandingPageConfigs { get; set; }
+        public DbSet<LandingPageContact> LandingPageContacts { get; set; }
         public DbSet<LandingPageSection> LandingPageSections { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

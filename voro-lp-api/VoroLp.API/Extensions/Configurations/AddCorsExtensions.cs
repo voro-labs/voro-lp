@@ -13,7 +13,8 @@
                     policyBuilder
                         .WithOrigins(allowedOrigins ?? [])
                         .AllowAnyHeader()
-                        .AllowAnyMethod());
+                        .AllowAnyMethod()
+                        .AllowCredentials());
             });
 
             return services;

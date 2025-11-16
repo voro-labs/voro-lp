@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -17,15 +16,34 @@ namespace VoroLp.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    Message = table.Column<string>(type: "text", nullable: false),
-                    IpAddress = table.Column<string>(type: "text", nullable: false),
-                    ReceiveDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    RemoteJid = table.Column<string>(type: "text", nullable: false),
+                    Number = table.Column<string>(type: "text", nullable: false),
+                    DisplayName = table.Column<string>(type: "text", nullable: true),
+                    ProfilePictureUrl = table.Column<string>(type: "text", nullable: true),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastMessageAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastKnownPresence = table.Column<string>(type: "text", nullable: true),
+                    LastPresenceAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contacts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Groups",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RemoteJid = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    ProfilePictureUrl = table.Column<string>(type: "text", nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastMessageAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Groups", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,6 +59,22 @@ namespace VoroLp.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LandingPageConfigs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LandingPageContacts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Message = table.Column<string>(type: "text", nullable: false),
+                    IpAddress = table.Column<string>(type: "text", nullable: false),
+                    ReceiveDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LandingPageContacts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -105,6 +139,32 @@ namespace VoroLp.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GroupMembers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    GroupId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ContactId = table.Column<Guid>(type: "uuid", nullable: false),
+                    JoinedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupMembers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GroupMembers_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupMembers_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -255,10 +315,148 @@ namespace VoroLp.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Instances",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UserExtensionUserId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Instances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Instances_UserExtensions_UserExtensionUserId",
+                        column: x => x.UserExtensionUserId,
+                        principalTable: "UserExtensions",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Chats",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RemoteJid = table.Column<string>(type: "text", nullable: false),
+                    IsGroup = table.Column<bool>(type: "boolean", nullable: false),
+                    InstanceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LastMessageAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ContactId = table.Column<Guid>(type: "uuid", nullable: true),
+                    GroupId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Chats_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Chats_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Chats_Instances_InstanceId",
+                        column: x => x.InstanceId,
+                        principalTable: "Instances",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ExternalId = table.Column<string>(type: "text", nullable: false),
+                    RemoteFrom = table.Column<string>(type: "text", nullable: false),
+                    RemoteTo = table.Column<string>(type: "text", nullable: false),
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    RawJson = table.Column<string>(type: "text", nullable: true),
+                    SentAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    IsFromMe = table.Column<bool>(type: "boolean", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    ContactId = table.Column<Guid>(type: "uuid", nullable: true),
+                    GroupId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ChatId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Messages_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chats_ContactId",
+                table: "Chats",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chats_GroupId",
+                table: "Chats",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chats_InstanceId",
+                table: "Chats",
+                column: "InstanceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupMembers_ContactId",
+                table: "GroupMembers",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupMembers_GroupId",
+                table: "GroupMembers",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Instances_UserExtensionUserId",
+                table: "Instances",
+                column: "UserExtensionUserId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_LandingPageSections_LandingPageConfigId",
                 table: "LandingPageSections",
                 column: "LandingPageConfigId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ChatId",
+                table: "Messages",
+                column: "ChatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ContactId",
+                table: "Messages",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_GroupId",
+                table: "Messages",
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -302,10 +500,16 @@ namespace VoroLp.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Contacts");
+                name: "GroupMembers");
+
+            migrationBuilder.DropTable(
+                name: "LandingPageContacts");
 
             migrationBuilder.DropTable(
                 name: "LandingPageSections");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
@@ -315,9 +519,6 @@ namespace VoroLp.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserClaims");
-
-            migrationBuilder.DropTable(
-                name: "UserExtensions");
 
             migrationBuilder.DropTable(
                 name: "UserLogins");
@@ -332,7 +533,22 @@ namespace VoroLp.Infrastructure.Migrations
                 name: "LandingPageConfigs");
 
             migrationBuilder.DropTable(
+                name: "Chats");
+
+            migrationBuilder.DropTable(
                 name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "Instances");
+
+            migrationBuilder.DropTable(
+                name: "UserExtensions");
 
             migrationBuilder.DropTable(
                 name: "Users");
