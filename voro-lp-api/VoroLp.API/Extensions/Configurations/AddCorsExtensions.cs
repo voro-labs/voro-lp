@@ -11,10 +11,11 @@
 
                 options.AddPolicy("JasmimCors", policyBuilder =>
                     policyBuilder
-                        .WithOrigins(allowedOrigins ?? [])
+                        .SetIsOriginAllowed(origin =>
+                            allowedOrigins.Contains(origin) ||
+                            origin.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase))
                         .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials());
+                        .AllowAnyMethod());
             });
 
             return services;
