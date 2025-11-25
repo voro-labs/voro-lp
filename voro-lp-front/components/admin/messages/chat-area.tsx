@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { ContactDto } from "@/types/DTOs/contactDto.interface";
+import { AttachmentActions } from "./attachment-actions";
 
 interface ChatAreaProps {
   contact?: ContactDto;
@@ -68,6 +69,18 @@ export function ChatArea({
       setEditedPhoto(null);
     }
   }, [isEditDialogOpen, contact, messages]);
+
+  function triggerFilePicker(accept: string) {
+    if (fileInputRef.current) {
+      fileInputRef.current.accept = accept;
+      fileInputRef.current.click();
+    }
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+  }
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -280,9 +293,22 @@ export function ChatArea({
         )}
 
         <form onSubmit={handleSubmit} className="flex items-center gap-2 p-4">
-          <Button type="button" variant="ghost" size="icon">
-            <Paperclip className="h-5 w-5" />
-          </Button>
+
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleFileChange}
+          />
+
+          <AttachmentActions
+            onSendImage={() => triggerFilePicker("image/*")}
+            onSendDocument={() => triggerFilePicker(".doc,.docx,.txt")}
+            onSendPdf={() => triggerFilePicker("application/pdf")}
+            onSendZip={() => triggerFilePicker(".zip,.rar,.7zip,.tar.gz")}
+            onSendVideo={() => triggerFilePicker("video/*")}
+            onSendAudio={() => triggerFilePicker("audio/*")}
+          />
 
           <Input
             ref={inputRef}
@@ -297,7 +323,7 @@ export function ChatArea({
               <Send className="h-5 w-5" />
             </Button>
           ) : (
-            <Button type="button" variant="ghost" size="icon">
+            <Button type="button" variant="ghost" size="icon" disabled>
               <Mic className="h-5 w-5" />
             </Button>
           )}
