@@ -22,6 +22,7 @@ export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefi
     name: "",
     email: "",
     message: "",
+    company: "",
   })
 
   const [success, setSuccess] = useState(false);
@@ -68,6 +69,7 @@ export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefi
       name: "",
       email: "",
       message: "",
+      company: ""
     })
 
     setSuccess(true);
@@ -205,6 +207,16 @@ export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefi
                         disabled={loading}
                       />
                       {fieldErrors.message && <span className="text-red-500 text-sm block mt-1">{fieldErrors.message}</span>}
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        name="company"
+                        style={{ display: "none" }}
+                        autoComplete="off"
+                        tabIndex={-1}
+                        onChange={(e) => handleInputChange("company" as any, e.target.value)}
+                      />
                     </div>
                     <Button type="submit" className="w-full" size="lg">
                       <Send className="mr-2 h-4 w-4" />

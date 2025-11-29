@@ -3,6 +3,7 @@ export interface LandingPageContactDto {
   name: string
   email: string
   message: string
+  company?: string
   ipAddress?: string
   receiveDate?: Date
   isRead?: boolean

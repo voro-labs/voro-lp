@@ -82,7 +82,15 @@ export async function POST(req: Request) {
     const guid = randomUUID();
     const ip = req.headers.get("x-forwarded-for") || "unknown";
     const receiveDate = new Date().toISOString();
+
+    if (body.company && body.company.trim().length > 0) {
+      return NextResponse.json({ ok: true }, { status: 200 }); 
+    }
     
+    if (isGibberish(body.name) || isGibberish(body.message)) {
+      return NextResponse.json({ ok: true }, { status: 200 });
+    }
+
     await sql`
       INSERT INTO "LandingPageContacts" ("Id", "Name", "Email", "Message", "IpAddress", "ReceiveDate", "IsRead", "CreatedAt")
       VALUES (${guid}, ${body.name}, ${body.email}, ${body.message}, ${ip}, ${receiveDate}, false, ${receiveDate})
@@ -93,4 +101,8 @@ export async function POST(req: Request) {
     console.error("Erro ao inserir contato:", error);
     return NextResponse.json({ success: false, error: "Erro ao salvar contato" }, { status: 500 });
   }
+}
+
+function isGibberish(text: string) {
+  return /^[A-Za-z]{14,}$/.test(text)
 }
