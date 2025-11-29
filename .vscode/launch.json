@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "API C#",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/voro-lp-api/VoroLp.API/VoroLp.API.csproj",
+      "launchConfigurationId": "TargetFramework=;http"
+    },
+    {
+      "name": "Next.js Frontend",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/voro-lp-front/node_modules/next/dist/bin/next",
+      "args": ["dev"],
+      "cwd": "${workspaceFolder}/voro-lp-front",
+      "console": "integratedTerminal"
+    }
+  ],
+
+  "compounds": [
+    {
+      "name": "Start API + Front",
+      "configurations": ["API C#", "Next.js Frontend"]
+    }
+  ]
+}

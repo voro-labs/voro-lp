@@ -3,7 +3,7 @@
 import { useAuth } from "@/contexts/auth.context"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { Home, Users, GraduationCap, CreditCard, BarChart3, LogOut, User } from "lucide-react"
+import { Home, Users, GraduationCap, CreditCard, BarChart3, LogOut, User, MessageCircle, Mail } from "lucide-react"
 import { rolesAllowed } from "@/lib/allowed-utils"
 import { toTitleCase } from "@/lib/utils"
 
@@ -83,6 +83,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 href="/admin/dashboard"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                  pointer-events-none opacity-50
                   ${
                     isActive("/admin/dashboard")
                       ? "bg-blue-100 text-blue-700"
@@ -94,9 +95,38 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 Dashboard
               </Link>
               <Link
+                href="/admin/messages"
+                className={`
+                  flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                  ${
+                    isActive("/admin/messages")
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-white-700 hover:bg-gray-600 hover:text-white-200"
+                  }
+                `}
+              >
+                <MessageCircle size={20} />
+                Mensagens
+              </Link>
+              <Link
+                href="/admin/messages/from-form"
+                className={`
+                  flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                  ${
+                    isActive("/admin/messages/from-form")
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-white-700 hover:bg-gray-600 hover:text-white-200"
+                  }
+                `}
+              >
+                <Mail size={20} />
+                Mensagens Via Formulário
+              </Link>
+              <Link
                 href="/admin/reports"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                  pointer-events-none opacity-50
                   ${
                     isActive("/admin/reports")
                       ? "bg-blue-100 text-blue-700"
@@ -111,6 +141,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 href="/admin/settings"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                  pointer-events-none opacity-50
                   ${
                     isActive("/admin/settings")
                       ? "bg-blue-100 text-blue-700"

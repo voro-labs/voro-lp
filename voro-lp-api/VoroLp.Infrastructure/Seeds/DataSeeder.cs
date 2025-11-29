@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Cms;
 using System.Data;
 using System.Text.Json;
 using VoroLp.Domain.Entities;
+using VoroLp.Domain.Entities.Evolution;
 using VoroLp.Domain.Entities.Identity;
 using VoroLp.Domain.Enums;
 using VoroLp.Infrastructure.Factories;
@@ -284,8 +284,8 @@ namespace VoroLp.Infrastructure.Seeds
                 {
                     UserName = "admin",
                     NormalizedUserName = "admin".ToUpper(),
-                    Email = "jordan@vorolabs.app",
-                    NormalizedEmail = "jordan@vorolabs.app".ToUpper(),
+                    Email = "contato@vorolabs.app",
+                    NormalizedEmail = "contato@vorolabs.app".ToUpper(),
                     FirstName = "System",
                     LastName = "Administrator",
                     CountryCode = "BR",
@@ -298,7 +298,16 @@ namespace VoroLp.Infrastructure.Seeds
                         {
                             Role = adminRole
                         }
-                    ]
+                    ],
+                    UserExtension = new UserExtension
+                    {
+                        Instances = [
+                            new Instance
+                            {
+                                Name = "voro-evolution"
+                            }
+                        ]
+                    }
                 };
 
                 context.Users.Add(admin);

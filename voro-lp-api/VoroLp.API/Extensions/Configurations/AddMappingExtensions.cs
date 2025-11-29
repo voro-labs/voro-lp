@@ -1,4 +1,5 @@
 ﻿using VoroLp.Application.Mappings;
+using VoroLp.Application.Mappings.Evolution;
 using VoroLp.Application.Mappings.Identity;
 
 namespace VoroLp.API.Extensions.Configurations
@@ -11,6 +12,8 @@ namespace VoroLp.API.Extensions.Configurations
             {
                 cfg.AddProfile<IdentityMappingProfile>();
                 cfg.AddProfile<GeneralMappingProfile>();
+                cfg.AddProfile<ContactMappingProfile>();
+                cfg.AddProfile<GroupMappingProfile>();
             });
 
             return services;

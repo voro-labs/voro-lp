@@ -2,16 +2,23 @@ import type { ResponseViewModel } from "@/types/response.interface"
 
 // Configurações centralizadas da API
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL,
+  BASE_URL: `${process.env.NEXT_PUBLIC_BASE_URL}/${process.env.NEXT_PUBLIC_API_URL}`,
   ENDPOINTS: {
     SIGNIN: "/auth/sign-in",
     RESET_PASSWORD: "/auth/reset-password",
     FORGOT_PASSWORD: "/auth/forgot-password",
-    LANDING_PAGE_CONFIG: "/landing-page-config"
+    LANDING_PAGE_CONFIG: "/landing-page-config",
+    CHAT: "/chat",
+    MESSAGE: "/message",
+    CONTACT: "/contact",
+    INSTANCE: "/instance"
   },
   HEADERS: {
     "Content-Type": "application/json",
     Accept: "application/json",
+  },
+  HEADERS_FORM: {
+    Accept: "*/*",
   },
 }
 
@@ -40,9 +47,10 @@ export async function apiCall<T>(endpoint: string, options: RequestInit = {}): P
   try {
     const url = `${API_CONFIG.BASE_URL}${endpoint}`
     const token = getAuthToken()
+    const isFormData = options.body instanceof FormData
 
     const headers = {
-      ...API_CONFIG.HEADERS,
+      ...(isFormData ? API_CONFIG.HEADERS_FORM : API_CONFIG.HEADERS),
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     }
@@ -54,59 +62,63 @@ export async function apiCall<T>(endpoint: string, options: RequestInit = {}): P
 
     const status = response.status
 
-    // Se for 401 (Unauthorized), remover token e redirecionar para login
-    if (status === 401) {
-      removeAuthToken()
-      if (typeof window !== "undefined") {
-        window.location.href = "/admin/sign-in"
-      }
+    // 🔥 Se o backend retornar JSON SEMPRE,
+    // mesmo em erro, vamos tentar decodificar o body primeiro.
+    const responseText = await response.text()
+
+    let json: ResponseViewModel<T> | null = null
+
+    try {
+      json = JSON.parse(responseText)
+    } catch {
+      // se não for JSON → erro do servidor
       return {
         status,
-        message: "Sessão expirada. Faça login novamente.",
+        message: responseText || "Erro inesperado no servidor.",
         data: null,
         hasError: true
       }
     }
 
-    if (!response.ok) {
-      let errorMessage = "Erro na requisição"
+    // 🔥 Agora `json` com certeza está decodificado
+    // e se sua API retorna ResponseViewModel no erro,
+    // já temos uma estrutura pronta.
 
-      try {
-        const errorData = await response.json()
-        // Se a API retorna no formato ResponseViewModel
-        if (errorData.message) {
-          errorMessage = errorData.message
+    if (!response.ok || json?.hasError) {
+
+      // caso sua API não mande mensagem
+      if (!json?.message) {
+        json!.message = `Erro ${status}: ${response.statusText}`
+      }
+
+      // 🔥 Se for 401, handle especial
+      if (status === 401) {
+        removeAuthToken()
+        if (typeof window !== "undefined") {
+          window.location.href = "/admin/sign-in"
         }
-      } catch {
-        errorMessage = `Erro ${status}: ${response.statusText}`
       }
 
       return {
         status,
-        message: errorMessage,
+        message: json?.message,
         data: null,
         hasError: true
       }
     }
 
-    const data: ResponseViewModel<T> = await response.json()
-
-    // Se a API já retorna no formato ResponseViewModel, use diretamente
-    return data
-  } catch (error) {
-    let errorMessage = "Erro de conexão"
-
-    if (error instanceof Error) {
-      if (error.message.includes("fetch")) {
-        errorMessage = "Não foi possível conectar com o servidor. Verifique se a API está rodando."
-      } else {
-        errorMessage = error.message
-      }
+    // sucesso
+    return {
+      status,
+      data: json?.data ?? null,
+      message: json?.message ?? null,
+      hasError: false
     }
 
+  } catch (error) {
     return {
       status: 0,
-      message: errorMessage,
+      message: "Erro de conexão com o servidor",
       data: null,
       hasError: true
     }
@@ -126,7 +138,6 @@ export async function secureApiCall<T>(endpoint: string, options: RequestInit = 
   const token = getAuthToken()
 
   if (!token) {
-    // Se não há token, redirecionar para login
     if (typeof window !== "undefined") {
       window.location.href = "/admin/sign-in"
     }

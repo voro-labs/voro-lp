@@ -1,10 +1,10 @@
 using Asp.Versioning;
-using VoroLp.API.Extensions.Configurations;
-using VoroLp.API.Filters;
-using VoroLp.API.Middlewares;
 using Scalar.AspNetCore;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using VoroLp.API.Extensions.Configurations;
+using VoroLp.API.Filters;
+using VoroLp.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 

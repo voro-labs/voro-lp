@@ -34,6 +34,8 @@ namespace VoroLp.Application.Services.Base
 
         public void Delete(T entity)
             => _repository.Delete(entity);
+        public void DeleteRange(IEnumerable<T> entities)
+            => _repository.DeleteRange(entities);
 
         public Task<int> SaveChangesAsync()
             => _repository.SaveChangesAsync();

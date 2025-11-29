@@ -1,6 +1,4 @@
-﻿using VoroLp.Application.DTOs.Identity;
-
-namespace VoroLp.Application.DTOs
+﻿namespace VoroLp.Application.DTOs
 {
     public class AuthDto
     {

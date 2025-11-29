@@ -8,11 +8,6 @@ export function useLandingPageConfig(slug: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleApiError = (message: string, err?: unknown) => {
-    console.error(message, err);
-    setError(message);
-  };
-
   const fetchLandingPageConfig = async () => {
     setLoading(true);
     setError(null);
@@ -47,7 +42,7 @@ export function useLandingPageConfig(slug: string) {
         if (response.hasError)
           throw new Error(response.message ?? "Erro desconhecido");
       } catch (err) {
-        handleApiError("Erro ao atualizar configurações do site", err);
+        setError(err instanceof Error ? err.message : "Erro desconhecido");
         // rollback local
         setLandingPageConfig((prev) =>
           prev ? { ...prev, ...LandingPageConfig } : LandingPageConfig

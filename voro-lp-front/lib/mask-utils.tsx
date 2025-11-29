@@ -6,7 +6,7 @@
  * @returns String no formato yyyy-MM-dd ou string vazia se inválida
  */
 export const phoneMasks: Record<string, { mask: string; placeholder: string }> = {
-    BR: { mask: "(##) #####-####", placeholder: "(11) 99999-9999" },
+    BR: { mask: "(##) ####-####", placeholder: "(11) 9999-9999" },
     US: { mask: "(###) ###-####", placeholder: "(555) 123-4567" },
     GB: { mask: "#### ### ####", placeholder: "0123 456 7890" },
     CA: { mask: "(###) ###-####", placeholder: "(555) 123-4567" },
