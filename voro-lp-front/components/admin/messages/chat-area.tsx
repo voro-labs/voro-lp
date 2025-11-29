@@ -25,6 +25,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { ContactDto } from "@/types/DTOs/contactDto.interface";
 import { AttachmentActions } from "./attachment-actions";
+import { PhoneInput } from "@/components/ui/custom/phone-input";
+import { flags } from "@/lib/flag-utils";
 
 interface ChatAreaProps {
   contact?: ContactDto;
@@ -61,12 +63,13 @@ export function ChatArea({
   const [editedPhoto, setEditedPhoto] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [countryCode, setCountryCode] = useState("BR")
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     if (isEditDialogOpen && contact) {
       setEditedName(contact.displayName || "");
-      setEditedNumber(contact.number);
+      setEditedNumber(contact.number?.slice(2) ?? "");
       setPreviewUrl(contact.profilePictureUrl || "");
       setEditedPhoto(null);
     }
@@ -98,7 +101,7 @@ export function ChatArea({
 
   const handleSaveContact = () => {
     if (!contact) return;
-    onEditContact?.(`${contact.id}`, editedName, editedNumber, editedPhoto);
+    onEditContact?.(`${contact.id}`, editedName, `${flags[countryCode].dialCodeOnlyNumber}${editedNumber}`, editedPhoto);
     setIsEditDialogOpen(false);
   };
 
@@ -381,12 +384,12 @@ export function ChatArea({
             </div>
             <div className="grid gap-2">
               <Label htmlFor="number">Número</Label>
-              <Input
+              <PhoneInput
                 id="number"
+                countryCode={countryCode}
+                autoComplete="off"
                 value={editedNumber}
-                onChange={(e) => setEditedNumber(e.target.value)}
-                placeholder="Número de telefone"
-              />
+                onChange={(value) => setEditedNumber(value)}></PhoneInput>
             </div>
           </div>
           <DialogFooter>

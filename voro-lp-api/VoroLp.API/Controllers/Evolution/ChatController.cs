@@ -10,8 +10,10 @@ using VoroLp.Application.DTOs.Evolution;
 using VoroLp.Application.DTOs.Evolution.Webhook;
 using VoroLp.Application.DTOs.Request;
 using VoroLp.Application.Services.Interfaces.Evolution;
+using VoroLp.Domain.Entities.Evolution;
 using VoroLp.Domain.Enums;
 using VoroLp.Shared.Extensions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace VoroLp.API.Controllers.Evolution
 {
@@ -153,9 +155,9 @@ namespace VoroLp.API.Controllers.Evolution
 
                     if (media.MediaStream != null)
                     {
-                        string? mediaBase64 = await media.MediaStream.ToBase64Async(media.Mimetype);
+                        string? mediaBase64 = await media.MediaStream.ToBase64Async();
 
-                        profilePicture = $"{mediaBase64}";
+                        profilePicture = $"data:{media.Mimetype};base64,{mediaBase64}";
                     }
                 }
                     
@@ -258,6 +260,10 @@ namespace VoroLp.API.Controllers.Evolution
 
                 await _messageService.AddAsync(messageDto);
 
+                contact.LastMessage = messageDto.Content;
+
+                contact.LastMessageFromMe = true;
+
                 contact.LastMessageAt = DateTimeOffset.UtcNow;
                 
                 _contactService.Update(contact);
@@ -282,7 +288,7 @@ namespace VoroLp.API.Controllers.Evolution
         // POST → Enviar resposta para mensagem
         // ======================================================
         [HttpPost("messages/{contactId:guid}/send/quoted")]
-        public async Task<IActionResult> SendQuotedMessage(Guid contactId, [FromBody] MessageRequestDto request)
+        public async Task<IActionResult> SendQuoted(Guid contactId, [FromBody] MessageRequestDto request)
         {
             try
             {
@@ -337,6 +343,10 @@ namespace VoroLp.API.Controllers.Evolution
 
                 await _messageService.AddAsync(messageDto);
 
+                contact.LastMessage = messageDto.Content;
+
+                contact.LastMessageFromMe = true;
+
                 contact.LastMessageAt = DateTimeOffset.UtcNow;
                 
                 _contactService.Update(contact);
@@ -363,7 +373,7 @@ namespace VoroLp.API.Controllers.Evolution
         // POST → Enviar resposta para mensagem
         // ======================================================
         [HttpPost("messages/{contactId:guid}/send/attachment")]
-        public async Task<IActionResult> SendAttachmentMessage(Guid contactId, [FromForm] MediaDto request)
+        public async Task<IActionResult> SendAttachment(Guid contactId, [FromForm] MediaDto request)
         {
             try
             {
@@ -387,9 +397,9 @@ namespace VoroLp.API.Controllers.Evolution
 
                 if (request.MediaStream != null)
                 {
-                    string? mediaBase64 = await request.MediaStream.ToBase64Async(request.Mimetype);
+                    string? mediaBase64 = await request.MediaStream.ToBase64Async();
 
-                    mediaRequest = new MediaRequestDto(contact.Number, "", $"{mediaBase64}", request);
+                    mediaRequest = new MediaRequestDto(contact.RemoteJid, "", $"{mediaBase64}", request);
                 }
 
                 if (mediaRequest == null)
@@ -400,11 +410,55 @@ namespace VoroLp.API.Controllers.Evolution
 
                 var response = JsonSerializer.Deserialize<MessageUpsertDataDto>(responseString);
 
+                if (response == null)
+                    return BadRequest("Erro ao enviar anexo.");
+
+                string? fileUrl = string.Empty;
+                string? content = string.Empty;
+                string? base64 = string.Empty;
+                MessageTypeEnum messageType = response.MessageType switch
+                {
+                    "imageMessage" => MessageTypeEnum.Image,
+                    "videoMessage" => MessageTypeEnum.Video,
+                    "reactionMessage" => MessageTypeEnum.Reaction,
+                    _ => MessageTypeEnum.Text
+                };
+                string? mimeType = string.Empty;
+                string? messageKey = string.Empty;
+                long? fileLength = 0;
+                int? width = 0;
+                int? height = 0;
+                int? durationSeconds = 0;
+                byte[]? thumbnail = [];
+
+                if (messageType == MessageTypeEnum.Image)
+                {
+                    base64 = mediaRequest.Media ?? string.Empty;
+                    mimeType = response.Message?.ImageMessage?.MimeType;
+                    fileLength = response.Message?.ImageMessage?.FileLength?.High ?? response.Message?.ImageMessage?.FileLength?.Low ?? 0;
+                    width = response.Message?.ImageMessage?.Width;
+                    height = response.Message?.ImageMessage?.Height;
+                    thumbnail = response.Message?.ImageMessage?.JpegThumbnail;
+                    fileUrl = response.Message?.ImageMessage?.Url;
+                }
+                else if (messageType == MessageTypeEnum.Video)
+                {
+                    base64 = mediaRequest.Media ?? string.Empty;
+                    mimeType = response.Message?.VideoMessage?.MimeType;
+                    fileLength = response.Message?.VideoMessage?.FileLength?.High ?? response.Message?.VideoMessage?.FileLength?.Low ?? 0;
+                    width = response.Message?.VideoMessage?.Width;
+                    height = response.Message?.VideoMessage?.Height;
+                    durationSeconds = response.Message?.VideoMessage?.Seconds;
+                    thumbnail = response.Message?.VideoMessage?.JpegThumbnail;
+                    fileUrl = response.Message?.VideoMessage?.Url;
+                }
+
                 var messageDto = new MessageDto()
                 {
                     ChatId = chat.Id,
                     ContactId = contact.Id,
-                    Content = $"{response?.Message.Conversation}",
+                    Content = $"{response?.Message?.Conversation}",
+                    Base64 = base64,
                     ExternalId = $"{response?.Key.Id}",
                     IsFromMe = true,
                     RawJson = responseString,
@@ -412,10 +466,21 @@ namespace VoroLp.API.Controllers.Evolution
                     RemoteTo = contact.RemoteJid,
                     SentAt = DateTimeOffset.UtcNow,
                     Status = MessageStatusEnum.Sent,
-                    Type = MessageTypeEnum.Image
+                    Type = messageType,
+                    FileUrl = fileUrl,
+                    MimeType = mimeType,
+                    FileLength = fileLength,
+                    Width = width,
+                    Height = height,
+                    DurationSeconds = durationSeconds,
+                    Thumbnail = thumbnail
                 };
 
                 await _messageService.AddAsync(messageDto);
+
+                contact.LastMessage = "Enviou um arquivo";
+
+                contact.LastMessageFromMe = true;
 
                 contact.LastMessageAt = DateTimeOffset.UtcNow;
                 
@@ -441,7 +506,7 @@ namespace VoroLp.API.Controllers.Evolution
         // POST → Enviar reação para mensagem
         // ======================================================
         [HttpPost("messages/{contactId:guid}/send/reaction")]
-        public async Task<IActionResult> SendReactionMessage(Guid contactId, [FromBody] ReactionRequestDto request)
+        public async Task<IActionResult> SendReaction(Guid contactId, [FromBody] ReactionRequestDto request)
         {
             try
             {
@@ -451,7 +516,9 @@ namespace VoroLp.API.Controllers.Evolution
 
                 _ = Guid.TryParse(request.Key.Id, out var guid);
 
-                var message = await _messageService.Query(m => m.Id == guid && m.ContactId == contactId).FirstOrDefaultAsync();
+                var message = await _messageService.Query(m => m.Id == guid && m.ContactId == contactId)
+                    .Include(m => m.MessageReactions)
+                    .FirstOrDefaultAsync();
 
                 if (chat == null)
                     return NoContent();
@@ -479,17 +546,34 @@ namespace VoroLp.API.Controllers.Evolution
 
                 var response = JsonSerializer.Deserialize<MessageUpsertDataDto>(responseString);
 
-                var messageReaction = new MessageReactionDto
+                _messageReactionService.DeleteRange(message.MessageReactions.Where(item => item.IsFromMe));
+
+                await _messageReactionService.SaveChangesAsync();
+
+                var messageReaction = new MessageReactionDto()
                 {
-                    MessageId = message.Id,
+                    RemoteFrom = "",
+                    RemoteTo = $"{contact.RemoteJid}",
                     ContactId = contact.Id,
-                    Reaction = request.Reaction
+                    MessageId = message.Id,
+                    Reaction = request.Reaction,
+                    IsFromMe = request.Key.FromMe
                 };
 
                 await _messageReactionService.AddAsync(messageReaction);
 
+                contact.LastMessage = $"Você reagiu com {request.Reaction}";
+
+                contact.LastMessageFromMe = request.Key.FromMe;
+
+                contact.LastMessageAt = DateTimeOffset.UtcNow;
+
+                _contactService.Update(contact);
+
                 await _messageReactionService.SaveChangesAsync();
-                
+
+                await _contactService.SaveChangesAsync();
+
                 return ResponseViewModel<object>
                     .Success(null)
                     .ToActionResult();

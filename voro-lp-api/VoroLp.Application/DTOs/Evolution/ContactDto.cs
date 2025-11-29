@@ -17,8 +17,10 @@ namespace VoroLp.Application.DTOs.Evolution
 
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
-        public DateTimeOffset LastMessageAt { get; set; } = DateTimeOffset.UtcNow;
         public string LastMessage { get; set; } = string.Empty;
+        public bool LastMessageFromMe { get; set; }
+        public DateTimeOffset LastMessageAt { get; set; } = DateTimeOffset.UtcNow;
+
         public int Unread { get; set; } = 0;
 
         public string? LastKnownPresence { get; set; }

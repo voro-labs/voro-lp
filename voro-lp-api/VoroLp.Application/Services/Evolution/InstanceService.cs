@@ -29,7 +29,7 @@ namespace VoroLp.Application.Services.Evolution
             name = name.ToLower();
 
             var instance = await this
-                .Query(i => i.Name == name)
+                .Query(i => i.Name.ToLower() == name.ToLower())
                 .FirstOrDefaultAsync();
 
             if (instance != null)

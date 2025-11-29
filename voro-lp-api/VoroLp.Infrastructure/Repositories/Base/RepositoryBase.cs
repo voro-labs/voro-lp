@@ -83,5 +83,10 @@ namespace VoroLp.Infrastructure.Repositories.Base
         {
             _dbSet.UpdateRange(entities);
         }
+
+        public void DeleteRange(IEnumerable<T> entities)
+        {
+            _dbSet.RemoveRange(entities);
+        }
     }
 }

@@ -11,7 +11,11 @@ namespace VoroLp.Application.DTOs.Evolution
         public string? ProfilePictureUrl { get; set; }
 
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+        public string LastMessage { get; set; } = string.Empty;
+        public bool LastMessageFromMe { get; set; }
         public DateTimeOffset LastMessageAt { get; set; } = DateTimeOffset.UtcNow;
+
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public ICollection<GroupMemberDto> Members { get; set; } = [];

@@ -7,7 +7,7 @@
             services.AddCors(options =>
             {
                 var corsSettings = configuration.GetSection("CorsSettings");
-                var allowedOrigins = corsSettings.GetSection("AllowedOrigins").Get<string[]>();
+                string[] allowedOrigins = corsSettings.GetSection("AllowedOrigins").Get<string[]>() ?? [];
 
                 options.AddPolicy("JasmimCors", policyBuilder =>
                     policyBuilder

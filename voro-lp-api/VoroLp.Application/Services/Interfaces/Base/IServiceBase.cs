@@ -14,6 +14,7 @@ namespace VoroLp.Application.Services.Interfaces.Base
         void UpdateRange(IEnumerable<T> entities);
         Task DeleteAsync(params object[] keyValues);
         void Delete(T entity);
+        void DeleteRange(IEnumerable<T> entities);
 
         Task<int> SaveChangesAsync();
     }

@@ -13,6 +13,9 @@
         public string? ProfilePictureUrl { get; set; }
 
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+        
+        public string LastMessage { get; set; } = string.Empty;
+        public bool LastMessageFromMe { get; set; }
         public DateTimeOffset LastMessageAt { get; set; } = DateTimeOffset.UtcNow;
 
         public string? LastKnownPresence { get; set; }

@@ -12,11 +12,7 @@ namespace VoroLp.Application.Mappings
             CreateMap<Contact, ContactDto>()
                 .ForMember(
                     dest => dest.LastMessage,
-                    opt => opt.MapFrom(src => src.Messages
-                        .OrderByDescending(m => m.SentAt)
-                        .Select(m => m.Content)
-                        .FirstOrDefault() ?? string.Empty
-                    )
+                    opt => opt.MapFrom(src => src.LastMessage)
                 ).ReverseMap();
             CreateMap<ContactIdentifierDto, ContactIdentifier>()
                 .ForPath(dest => dest.Contact.RemoteJid, opt => opt.MapFrom(src => src.RemoteJidAlt))

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import { Search, Plus } from 'lucide-react'
+import { Search, Plus, CheckCheck } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { ChangeEvent, useEffect, useState } from "react"
 import { ContactDto } from "@/types/DTOs/contactDto.interface"
@@ -138,8 +138,11 @@ export function ConversationList({ contacts, selectedId, onAddContact, onSelect 
                 </span>
               </div>
               <div className="flex items-center justify-between gap-2">
-                <p className="text-sm text-muted-foreground truncate">
-                  {conversation.lastMessage}
+                <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
+                  {conversation.lastMessageFromMe && (
+                    <CheckCheck className="h-3.5 w-3.5 shrink-0" />
+                  )}
+                  <span className="truncate">{conversation.lastMessage}</span>
                 </p>
                 {(conversation.unread || 0) > 0 && (
                   <Badge

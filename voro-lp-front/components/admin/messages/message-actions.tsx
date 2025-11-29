@@ -40,15 +40,13 @@ export function MessageActions({
         <DropdownMenuContent align="start" className="w-auto">
           <div className="flex gap-1 p-1">
             {quickReactions.map((emoji) => (
-              <Button
+              <DropdownMenuItem
                 key={emoji}
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 text-lg hover:scale-125 transition-transform"
+                className="h-8 w-8 p-0 text-lg flex items-center justify-center cursor-pointer"
                 onClick={() => onReact?.(message, emoji)}
               >
                 {emoji}
-              </Button>
+              </DropdownMenuItem>
             ))}
           </div>
         </DropdownMenuContent>

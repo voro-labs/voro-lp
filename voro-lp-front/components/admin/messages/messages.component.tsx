@@ -65,7 +65,7 @@ export default function Messages() {
             setSelectedContactId(id);
           }}
           onAddContact={(name, phoneNumber) => {
-            saveContact(name, phoneNumber, '')
+            saveContact(name, phoneNumber, 'voro-evolution')
           }}
         />
 

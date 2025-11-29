@@ -85,8 +85,6 @@ namespace VoroLp.Application.Services.Evolution
 
                 // Garantir que o contato é membro do grupo
                 await _groupMemberService.EnsureGroupMembership(group, contactIdentifier.Contact);
-
-                group.LastMessageAt = DateTimeOffset.UtcNow;
             }
             else
             {
@@ -101,7 +99,6 @@ namespace VoroLp.Application.Services.Evolution
                     .GetOrCreateAsync(pushName, normalizedSenderJid, remoteJid);
 
                 chat.ContactId = contactIdentifier.Contact.Id;
-                contactIdentifier.Contact.LastMessageAt = DateTimeOffset.UtcNow;
             }
 
             return (contactIdentifier.Contact, group, chat);

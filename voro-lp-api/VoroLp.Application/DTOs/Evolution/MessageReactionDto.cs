@@ -11,16 +11,26 @@ namespace VoroLp.Application.DTOs.Evolution
         public string Reaction { get; set; } = string.Empty;
 
         // Quem enviou a reação
-        public Guid? ContactId { get; set; }
-        public Contact? Contact { get; set; }
+        public string RemoteFrom { get; set; } = string.Empty;
+
+        // Quem recebeu a reação
+        public string RemoteTo { get; set; } = string.Empty;
+
+        public bool IsFromMe { get; set; }
 
         // Quando a reação foi enviada
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset SentAt { get; set; } = DateTimeOffset.UtcNow;
+
+        // Quem recebeu a reação
+        public Guid? ContactId { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        public Contact? Contact { get; set; }
 
         // A mensagem relacionada
         public Guid MessageId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public MessageDto Message { get; set; } = null!;
+        public Message Message { get; set; } = null!;
     }
 }

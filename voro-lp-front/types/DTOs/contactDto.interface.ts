@@ -7,5 +7,6 @@ export interface ContactDto {
   lastMessageAt?: string;
   lastPresenceAt?: string;
   lastMessage?: string;
+  lastMessageFromMe?: boolean;
   unread?: number;
 }

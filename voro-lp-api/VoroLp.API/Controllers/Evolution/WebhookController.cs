@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Text.Json;
 using VoroLp.Application.DTOs.Evolution.Webhook;
 using VoroLp.Application.Services.Interfaces.Evolution;
@@ -161,6 +162,8 @@ namespace VoroLp.API.Controllers.Evolution
             int? durationSeconds = 0;
             byte[]? thumbnail = [];
 
+            var lastMessage = "";
+
             if (messageType == MessageTypeEnum.Image)
             {
                 base64 = data.Message?.Base64 ?? string.Empty;
@@ -170,6 +173,8 @@ namespace VoroLp.API.Controllers.Evolution
                 height = data.Message?.ImageMessage?.Height;
                 thumbnail = data.Message?.ImageMessage?.JpegThumbnail;
                 fileUrl = data.Message?.ImageMessage?.Url;
+
+                lastMessage = "Enviou uma imagem";
             }
             else if (messageType == MessageTypeEnum.Video)
             {
@@ -181,11 +186,19 @@ namespace VoroLp.API.Controllers.Evolution
                 durationSeconds = data.Message?.VideoMessage?.Seconds;
                 thumbnail = data.Message?.VideoMessage?.JpegThumbnail;
                 fileUrl = data.Message?.VideoMessage?.Url;
+
+                lastMessage = "Enviou um video";
             }
             else if (messageType == MessageTypeEnum.Reaction)
             {
                 content = data.Message?.ReactionMessage?.Text ?? string.Empty;
                 messageKey = data.Message?.ReactionMessage?.Key.Id ?? string.Empty;
+
+                lastMessage = $"Reagiu com {data.Message?.ReactionMessage?.Text}";
+            }
+            else
+            {
+                lastMessage = content;
             }
 
             content = data.Message?.Conversation ?? string.Empty;
@@ -219,9 +232,12 @@ namespace VoroLp.API.Controllers.Evolution
 
                 var reaction = new MessageReaction()
                 {
-                    ContactId = fromMe ? senderContact?.Id : null,
+                    RemoteFrom = fromMe ? $"{senderFromEnvelope}" : $"{normalizedJid}",
+                    RemoteTo = fromMe ? $"{normalizedJid}" : $"{senderFromEnvelope}",
+                    ContactId = senderContact?.Id,
                     MessageId = message.Id,
                     Reaction = content,
+                    IsFromMe = fromMe
                 };
 
                 message.MessageReactions.Add(reaction);
@@ -294,7 +310,26 @@ namespace VoroLp.API.Controllers.Evolution
             }
 
             if (senderContact != null && senderContact.Id != Guid.Empty)
+            {
+                senderContact.LastMessage = lastMessage;
+
+                senderContact.LastMessageFromMe = fromMe;
+
+                senderContact.LastMessageAt = DateTimeOffset.UtcNow;
+
                 _contactService.Update(senderContact);
+            }
+
+            if (group != null)
+            {
+                group.LastMessage = lastMessage;
+                
+                group.LastMessageFromMe = fromMe;
+
+                group.LastMessageAt = DateTimeOffset.UtcNow;
+                
+                _groupService.Update(group);
+            }
             
             _chatService.Update(chat);
 
