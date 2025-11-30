@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { Calendar, ChevronLeft, ChevronRight, Clock, ChevronUp, ChevronDown } from "lucide-react"
+import { Input } from "../input"
 
 interface DateTimePickerProps {
   value: string // ISO datetime string
@@ -399,7 +400,7 @@ export function DateTimePicker({
   return (
     <div ref={containerRef} className="relative">
       <div className="relative">
-        <input
+        <Input
           type="text"
           id={id}
           value={displayValue}

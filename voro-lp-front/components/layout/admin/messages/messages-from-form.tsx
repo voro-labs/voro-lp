@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 import { motion, AnimatePresence } from "framer-motion"
-import { Loader2, ArrowLeft, Mail, MailOpen, Trash2, Eye, User, Calendar, Globe, Inbox, RefreshCw } from "lucide-react"
+import { Loader2, ArrowLeft, Mail, MailOpen, Trash2, Eye, User, Calendar, Globe, Inbox, RefreshCw, FileText } from "lucide-react"
 import { useLandingPageContact } from "@/hooks/use-landing-page-contact.hook"
 import { LandingPageContactDto } from "@/types/DTOs/landingPageContactDto.interface"
 
@@ -52,6 +52,15 @@ export default function MessagesFromForm() {
     await deleteMsg(deleteMessage.id)
     setMessages(messages.filter((m) => m.id !== deleteMessage.id))
     setDeleteMessage(null)
+  }
+
+  const handleCreateProposal = (message: LandingPageContactDto) => {
+    const params = new URLSearchParams({
+      contactId: message.id.toString(),
+      clientName: message.name,
+      clientEmail: message.email,
+    })
+    router.push(`/admin/proposals/new?${params.toString()}`)
   }
 
   const unreadCount = messages.filter((m) => !m.isRead).length
@@ -219,7 +228,8 @@ export default function MessagesFromForm() {
                     <div>
                       <p className="text-xs text-muted-foreground">Data de Recebimento</p>
                       <p className="font-medium">
-                        {new Date(`${selectedMessage.receiveDate}`).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+                        {new Date(`${selectedMessage.receiveDate}`).toLocaleDateString("pt-BR", { timeZone: "UTC" })} às{" "}
+                        {new Date(`${selectedMessage.receiveDate}`).toLocaleTimeString("pt-BR", { timeZone: "UTC",})}
                       </p>
                     </div>
                   </div>
@@ -237,8 +247,21 @@ export default function MessagesFromForm() {
                   <p className="text-xs text-muted-foreground mb-2">Mensagem</p>
                   <p className="whitespace-pre-wrap">{selectedMessage.message}</p>
                 </div>
-                <div className="flex gap-2 justify-end">
-                  <Button variant="outline" onClick={() => markAsRead(selectedMessage.id, !selectedMessage.isRead)}>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full justify-end">
+                  <Button
+                    variant="default"
+                    onClick={() => handleCreateProposal(selectedMessage)}
+                    className="gap-2 col-span-1 sm:col-span-3"
+                  >
+                    <FileText className="w-4 h-4" />
+                    Criar Proposta Comercial
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => markAsRead(selectedMessage.id, !selectedMessage.isRead)}
+                    className="gap-2 col-span-1 sm:col-span-2"
+                  >
                     {selectedMessage.isRead ? (
                       <>
                         <Mail className="w-4 h-4 mr-2" />
@@ -251,12 +274,14 @@ export default function MessagesFromForm() {
                       </>
                     )}
                   </Button>
+
                   <Button
                     variant="destructive"
                     onClick={() => {
                       setSelectedMessage(null)
                       setDeleteMessage(selectedMessage)
                     }}
+                    className="gap-2 col-span-1 sm:col-span-1"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Excluir

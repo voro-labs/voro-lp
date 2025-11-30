@@ -56,7 +56,7 @@ namespace VoroLp.Infrastructure.Seeds
                             {
                                 Id = Guid.NewGuid(),
                                 SectionType = "Hero",
-                                MetaData = JsonSerializer.Serialize("""
+                                MetaData = JsonDocument.Parse("""
                                 {
                                     "subtitle": "Desenvolvemos sistemas, páginas e automações que conectam você aos seus clientes."
                                 }
@@ -90,7 +90,7 @@ namespace VoroLp.Infrastructure.Seeds
                             {
                                 Id = Guid.NewGuid(),
                                 SectionType = "Process",
-                                MetaData = JsonSerializer.Serialize("""
+                                MetaData = JsonDocument.Parse("""
                                 {
                                   "steps": [
                                     {
@@ -118,7 +118,7 @@ namespace VoroLp.Infrastructure.Seeds
                             {
                                 Id = Guid.NewGuid(),
                                 SectionType = "Services",
-                                MetaData = JsonSerializer.Serialize("""
+                                MetaData = JsonDocument.Parse("""
                                 {
                                   "services": [
                                     {
@@ -151,8 +151,8 @@ namespace VoroLp.Infrastructure.Seeds
                             {
                                 Id = Guid.NewGuid(),
                                 SectionType = "Contact",
-                                MetaData = JsonSerializer.Serialize("""
-                                { 
+                                MetaData = JsonDocument.Parse("""
+                                {
                                     "whatsapp": "5511999999999",
                                     "email": "contato@vorolabs.app"
                                 }
@@ -164,7 +164,7 @@ namespace VoroLp.Infrastructure.Seeds
                             {
                                 Id = Guid.NewGuid(),
                                 SectionType = "Footer",
-                                MetaData = JsonSerializer.Serialize("""
+                                MetaData = JsonDocument.Parse("""
                                 {
                                     "linkedin": "https://linkedin.com/company/vorolabs",
                                     "instagram": "https://instagram.com/vorolabs",

@@ -25,17 +25,11 @@ namespace VoroLp.Infrastructure.Factories
         public DbSet<LandingPageConfig> LandingPageConfigs { get; set; }
         public DbSet<LandingPageContact> LandingPageContacts { get; set; }
         public DbSet<LandingPageSection> LandingPageSections { get; set; }
+        public DbSet<LandingPageProposal> LandingPageProposals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<LandingPageSection>(b =>
-            {
-                b.Property(lps => lps.MetaData)
-                    .HasColumnType("jsonb")
-                    .HasDefaultValueSql("'{}'::jsonb");
-            });
 
             builder.Entity<UserExtension>()
                 .HasKey(up => up.UserId);

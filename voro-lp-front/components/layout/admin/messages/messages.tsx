@@ -1,6 +1,6 @@
 "use client"
 
-import { Loading } from "@/components/loading/loading.component"
+import { Loading } from "@/components/ui/custom/loading/loading"
 import { ConversationList } from "./conversation-list"
 import { ChatArea } from "./chat-area"
 import { useEvolutionChat } from "@/hooks/use-evolution-chat.hook"

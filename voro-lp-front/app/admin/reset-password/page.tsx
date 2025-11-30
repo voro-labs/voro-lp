@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Lock, Eye, EyeOff, AlertCircle, CheckCircle, ArrowLeft } from "lucide-react"
 import { API_CONFIG, apiCall } from "@/lib/api"
+import { Input } from "@/components/ui/input"
 
 export default function ResetPasswordPage() {
   const router = useRouter()
@@ -229,7 +230,7 @@ export default function ResetPasswordPage() {
               Nova Senha
             </label>
             <div className="relative">
-              <input
+              <Input
                 type={showPassword ? "text" : "password"}
                 id="newPassword"
                 value={formData.newPassword}
@@ -285,7 +286,7 @@ export default function ResetPasswordPage() {
               Confirmar Nova Senha
             </label>
             <div className="relative">
-              <input
+              <Input
                 type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 value={formData.confirmPassword}

@@ -3,6 +3,8 @@
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Input } from "../input"
 
 interface DatePickerProps {
   value: string // ISO date string
@@ -47,6 +49,8 @@ export function DatePicker({
   ]
 
   const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+
+  const years = Array.from({ length: 20 }, (_, i) => new Date().getUTCFullYear() - 10 + i)
 
   // Format date to Brazilian format (dd/MM/yyyy)
   const formatDateToBR = (isoDate: string): string => {
@@ -112,7 +116,11 @@ export function DatePicker({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node) &&
+        !(event.target instanceof HTMLElement && event.target.closest("[data-radix-popper-content-wrapper]"))
+      ) {
         setIsOpen(false)
       }
     }
@@ -206,7 +214,7 @@ export function DatePicker({
               ? "bg-blue-600 text-white hover:bg-blue-700"
               : isToday
                 ? "bg-blue-100 text-blue-600 font-semibold"
-                : "text-gray-700 hover:text-blue-600"
+                : "text-white-700 hover:text-blue-600"
           }`}
         >
           {day}
@@ -220,14 +228,14 @@ export function DatePicker({
   return (
     <div ref={containerRef} className="relative">
       <div className="relative">
-        <input
+        <Input
           type="text"
           id={id}
           value={displayValue}
           onChange={handleInputChange}
           onBlur={handleInputBlur}
           onFocus={() => setIsOpen(true)}
-          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 pr-10 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring"
           placeholder={placeholder}
           disabled={disabled}
           autoComplete="off"
@@ -244,7 +252,7 @@ export function DatePicker({
       </div>
 
       {isOpen && !disabled && (
-        <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[320px]">
+        <div className="absolute top-full left-0 mt-1 bg-accent border border-input rounded-lg shadow-lg z-50 min-w-[320px]">
           <div className="p-4">
             {/* Calendar Header */}
             <div className="flex items-center justify-between mb-4">
@@ -257,29 +265,27 @@ export function DatePicker({
               </button>
 
               <div className="flex items-center space-x-2">
-                <select
-                  value={currentMonth}
-                  onChange={(e) => setCurrentMonth(Number(e.target.value))}
-                  className="text-sm font-medium bg-transparent border-none focus:outline-none cursor-pointer"
-                >
-                  {months.map((month, index) => (
-                    <option key={index} value={index}>
-                      {month}
-                    </option>
-                  ))}
-                </select>
+                <Select value={`${currentMonth}`} onValueChange={(v) => setCurrentMonth(Number(v))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {months.map((month, index) => (
+                      <SelectItem key={index} value={`${index}`}>{month}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-                <select
-                  value={currentYear}
-                  onChange={(e) => setCurrentYear(Number(e.target.value))}
-                  className="text-sm font-medium bg-transparent border-none focus:outline-none cursor-pointer"
-                >
-                  {Array.from({ length: 20 }, (_, i) => currentYear - 10 + i).map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
+                <Select value={`${currentYear}`} onValueChange={(v) => setCurrentYear(Number(v))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map(year => (
+                      <SelectItem key={year} value={`${year}`}>{year}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <button
@@ -294,7 +300,7 @@ export function DatePicker({
             {/* Week Days */}
             <div className="grid grid-cols-7 gap-1 mb-2">
               {weekDays.map((day) => (
-                <div key={day} className="text-xs font-medium text-gray-500 text-center py-1">
+                <div key={day} className="text-xs font-medium text-white text-center py-1">
                   {day}
                 </div>
               ))}
@@ -327,7 +333,7 @@ export function DatePicker({
                   onChange("")
                   setIsOpen(false)
                 }}
-                className="text-sm text-gray-500 hover:text-gray-700"
+                className="text-sm text-white hover:text-white-700"
               >
                 Limpar
               </button>

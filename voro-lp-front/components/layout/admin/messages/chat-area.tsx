@@ -187,7 +187,7 @@ export function ChatArea({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-4 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:hover:bg-muted-foreground/50">
+      <div className="voro-scroll-y">
         {messages.map((message) => (
           <div
             key={message.id}
@@ -302,7 +302,7 @@ export function ChatArea({
 
         <form onSubmit={handleSubmit} className="flex items-center gap-2 p-4">
 
-          <input
+          <Input
             type="file"
             ref={fileInputRef}
             className="hidden"
@@ -357,7 +357,7 @@ export function ChatArea({
                   {editedName.charAt(0) || editedNumber.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <input
+              <Input
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"

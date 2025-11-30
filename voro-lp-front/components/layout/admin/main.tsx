@@ -4,11 +4,11 @@ import type React from "react"
 
 import { useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { LoadingSimple } from "../../loading/loading-simple.component"
+import { LoadingSimple } from "../../ui/custom/loading/loading-simple"
 import { useAuth } from "@/contexts/auth.context"
 import { routesAllowed } from "@/lib/allowed-utils"
-import { Navbar } from "./navbar.component"
-import { Sidebar } from "./sidebar.component"
+import { Navbar } from "./navbar"
+import { Sidebar } from "./sidebar"
 
 interface MainProps {
   children: React.ReactNode
@@ -39,7 +39,7 @@ export function Main({ children }: MainProps) {
     )
   }
 
-  if (pathname === "/") {
+  if (pathname === "/" || pathname.startsWith("/proposals")) {
     return (
       <div className="min-h-screen">
         <main className="flex-1">{children}</main>

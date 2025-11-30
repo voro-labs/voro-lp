@@ -3,7 +3,7 @@
 import { useAuth } from "@/contexts/auth.context"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { Home, Users, GraduationCap, CreditCard, BarChart3, LogOut, User, MessageCircle, Mail } from "lucide-react"
+import { Home, Users, GraduationCap, CreditCard, BarChart3, LogOut, User, MessageCircle, Mail, File } from "lucide-react"
 import { rolesAllowed } from "@/lib/allowed-utils"
 import { toTitleCase } from "@/lib/utils"
 
@@ -83,7 +83,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 href="/admin/dashboard"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                  pointer-events-none opacity-50
                   ${
                     isActive("/admin/dashboard")
                       ? "bg-blue-100 text-blue-700"
@@ -93,6 +92,20 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               >
                 <CreditCard size={20} />
                 Dashboard
+              </Link>
+              <Link
+                href="/admin/proposals/new"
+                className={`
+                  flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                  ${
+                    isActive("/admin/proposals/new")
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-white-700 hover:bg-gray-600 hover:text-white-200"
+                  }
+                `}
+              >
+                <File size={20} />
+                Nova Proposta
               </Link>
               <Link
                 href="/admin/messages"

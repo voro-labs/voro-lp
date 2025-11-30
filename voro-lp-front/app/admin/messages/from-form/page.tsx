@@ -1,5 +1,5 @@
 import { AuthGuard } from "@/components/auth/auth.guard";
-import MessagesFromFormComponent from "@/components/admin/messages/messages-from-form/messages-from-form.component";
+import MessagesFromFormComponent from "@/components/layout/admin/messages/messages-from-form";
 
 
 export default function MessagesFromFormPage() {

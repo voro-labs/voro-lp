@@ -49,7 +49,7 @@ const [countries, setCountries] = useState<CountryDto[]>(
         ))}
       </select>
 
-      <div className="flex items-center gap-2 px-3 py-2 bg-white shadow-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <div className="flex items-center gap-2 px-3 py-2 shadow-sm border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring">
         {selectedCountry && (
           <img src={selectedCountry.flagUrl || "/placeholder.svg"} alt="Bandeira" className="w-6 h-4 object-cover" />
         )}

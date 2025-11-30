@@ -12,7 +12,7 @@ import { AlertCircle, Mail, MessageCircle, Send } from "lucide-react"
 import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
 import { useLandingPageContact } from "@/hooks/use-landing-page-contact.hook"
 import { LandingPageContactDto } from "@/types/DTOs/landingPageContactDto.interface"
-import { Spinner } from "../loading/spinner.component"
+import { Spinner } from "../../ui/custom/loading/spinner"
 
 export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined }) {
   const { postLandingPageContact, loading, error, clearError } = useLandingPageContact();
@@ -209,7 +209,7 @@ export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefi
                       {fieldErrors.message && <span className="text-red-500 text-sm block mt-1">{fieldErrors.message}</span>}
                     </div>
                     <div>
-                      <input
+                      <Input
                         type="text"
                         name="company"
                         style={{ display: "none" }}

@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth.context"
 import { getAuthToken } from "@/lib/api"
 import { rolesAllowed } from "@/lib/allowed-utils"
-import { LoadingSimple } from "../loading/loading-simple.component"
+import { LoadingSimple } from "../ui/custom/loading/loading-simple"
 
 interface AuthGuardProps {
   children: React.ReactNode

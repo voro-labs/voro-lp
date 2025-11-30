@@ -1,16 +1,16 @@
 "use client"
 
-import { Navbar } from "@/components/layout/navbar"
-import { Hero } from "@/components/layout/hero"
-import { Services } from "@/components/layout/services"
-import { Process } from "@/components/layout/process"
-import { About } from "@/components/layout/about"
-import { Contact } from "@/components/layout/contact"
-import { Footer } from "@/components/layout/footer"
+import { Navbar } from "@/components/layout/landing/navbar"
+import { Hero } from "@/components/layout/landing/hero"
+import { Services } from "@/components/layout/landing/services"
+import { Process } from "@/components/layout/landing/process"
+import { About } from "@/components/layout/landing/about"
+import { Contact } from "@/components/layout/landing/contact"
+import { Footer } from "@/components/layout/landing/footer"
 
 import { AlertCircle } from "lucide-react"
 import { useLandingPageConfig } from "@/hooks/use-landing-page-config.hook"
-import { Loading } from "@/components/loading/loading.component"
+import { Loading } from "@/components/ui/custom/loading/loading"
 
 export default function HomePage() {
   const { LandingPageConfig, loading, error, clearError } = useLandingPageConfig("home")

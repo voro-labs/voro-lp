@@ -5,6 +5,8 @@ export const API_CONFIG = {
   BASE_URL: `${process.env.NEXT_PUBLIC_BASE_URL}/${process.env.NEXT_PUBLIC_API_URL}`,
   ENDPOINTS: {
     SIGNIN: "/auth/sign-in",
+    VERIFY_CODE: "/auth/verify-code",
+    CONFIRM_EMAIL: "/auth/confirm-email",
     RESET_PASSWORD: "/auth/reset-password",
     FORGOT_PASSWORD: "/auth/forgot-password",
     LANDING_PAGE_CONFIG: "/landing-page-config",

@@ -1,6 +1,5 @@
 import { AuthGuard } from "@/components/auth/auth.guard";
-import Settings from "@/components/admin/settings/settings.component";
-
+import Settings from "@/components/layout/admin/settings/settings";
 
 export default function SettingsPage() {
   return (

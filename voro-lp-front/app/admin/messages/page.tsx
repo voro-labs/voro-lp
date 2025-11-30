@@ -1,5 +1,5 @@
 import { AuthGuard } from "@/components/auth/auth.guard";
-import Messages from "@/components/admin/messages/messages.component";
+import Messages from "@/components/layout/admin/messages/messages";
 
 
 export default function MessagesPage() {

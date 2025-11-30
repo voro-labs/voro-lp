@@ -6,6 +6,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Mail, ArrowLeft, AlertCircle, CheckCircle } from "lucide-react"
 import { API_CONFIG, apiCall } from "@/lib/api"
+import { Input } from "@/components/ui/input"
 
 export default function ForgotPasswordPage() {
   const router = useRouter()
@@ -142,7 +143,7 @@ export default function ForgotPasswordPage() {
             <label htmlFor="email" className="block text-sm font-bold mb-2 text-gray-700">
               Email
             </label>
-            <input
+            <Input
               type="email"
               id="email"
               value={email}

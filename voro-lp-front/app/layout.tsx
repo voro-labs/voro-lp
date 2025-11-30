@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css"
 import { AuthProvider } from "@/contexts/auth.context"
-import { Main } from "@/components/admin/layout/main.component"
+import { Main } from "@/components/layout/admin/main"
 
 const inter = Inter({ subsets: ["latin"] })
 

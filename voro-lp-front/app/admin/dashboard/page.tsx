@@ -1,5 +1,5 @@
 import { AuthGuard } from "@/components/auth/auth.guard";
-import Dashboard from "@/components/admin/dashboard/dashboard.component";
+import Dashboard from "@/components/layout/admin/dashboard/dashboard";
 
 export default function DashboardPage() {
   return (

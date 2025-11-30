@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useRef, useCallback } from "react"
 import { Clock, ChevronUp, ChevronDown } from "lucide-react"
+import { Input } from "../input"
 
 interface TimePickerProps {
   value: string // Time string in HH:mm format
@@ -271,7 +272,7 @@ export function TimePicker({
   return (
     <div ref={containerRef} className="relative">
       <div className="relative">
-        <input
+        <Input
           type="text"
           id={id}
           value={displayValue}

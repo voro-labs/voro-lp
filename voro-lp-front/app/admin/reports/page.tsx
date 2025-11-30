@@ -1,6 +1,5 @@
 import { AuthGuard } from "@/components/auth/auth.guard";
-import Reports from "@/components/admin/reports/reports.component";
-
+import Reports from "@/components/layout/admin/reports/reports";
 
 export default function ReportsPage() {
   return (

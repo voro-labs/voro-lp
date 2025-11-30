@@ -8,7 +8,8 @@ import { Eye, EyeOff, AlertCircle } from "lucide-react"
 import { useAuth } from "@/contexts/auth.context"
 import { useSignIn } from "@/hooks/use-sign-in.hook"
 import { SignInDto } from "@/types/DTOs/signInDto.interface"
-import { LoadingSimple } from "@/components/loading/loading-simple.component"
+import { LoadingSimple } from "@/components/ui/custom/loading/loading-simple"
+import { Input } from "@/components/ui/input"
 
 export default function SignInPage() {
   const router = useRouter()
@@ -99,7 +100,7 @@ export default function SignInPage() {
             <label htmlFor="email" className="block text-sm font-bold mb-2 text-gray-700">
               Email
             </label>
-            <input
+            <Input
               type="email"
               id="email"
               value={formData.email}
@@ -120,7 +121,7 @@ export default function SignInPage() {
               Senha
             </label>
             <div className="relative">
-              <input
+              <Input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 value={formData.password}

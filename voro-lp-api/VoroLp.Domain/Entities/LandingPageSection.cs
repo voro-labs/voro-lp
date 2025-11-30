@@ -1,4 +1,7 @@
-﻿namespace VoroLp.Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
+
+namespace VoroLp.Domain.Entities
 {
     public class LandingPageSection
     {
@@ -15,7 +18,8 @@
         public string? HtmlContent { get; set; }
 
         // JSON com informações específicas (ex: cores, imagens, etc.)
-        public string MetaData { get; set; } = "{}";
+        [Column(TypeName = "jsonb")]
+        public JsonDocument MetaData { get; set; } = JsonDocument.Parse("{}");
 
         // Preço normal e promocional (opcional)
         public decimal? Price { get; set; }

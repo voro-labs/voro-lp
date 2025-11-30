@@ -1,12 +1,16 @@
 "use client"
 
+import { LoadingSimple } from "@/components/ui/custom/loading/loading-simple"
 import { useLandingPageConfig } from "@/hooks/use-landing-page-config.hook"
-import { Loading } from "@/components/loading/loading.component"
 import { AlertCircle } from "lucide-react"
 
 
-export default function Dashboard() {
-  const { LandingPageConfig, loading, updateLandingPageConfig, error, clearError } = useLandingPageConfig("dashboard")
+export default function Settings() {
+  const { loading, error, clearError } = useLandingPageConfig("settings")
+
+  if (loading) {
+    return <LoadingSimple />
+  }
 
   if (error) {
     return (
@@ -14,7 +18,7 @@ export default function Dashboard() {
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded flex items-start gap-2">
           <AlertCircle size={20} className="shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium">Erro ao carregar dashboard</p>
+            <p className="font-medium">Erro ao carregar settings</p>
             <p className="text-sm">{error}</p>
             <button onClick={clearError} className="text-sm underline mt-1">
               Tentar novamente
@@ -27,7 +31,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Loading isLoading={loading} />
+      
     </div>
   )
 }
