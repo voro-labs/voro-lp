@@ -104,12 +104,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
+
+    const proposalNumber = id
+
     const { status } = await request.json()
 
     await sql`
       UPDATE "LandingPageProposals" 
       SET "Status" = ${status}, "UpdatedAt" = CURRENT_TIMESTAMP 
-      WHERE "Id" = ${id}
+      WHERE "ProposalNumber" = ${proposalNumber}
     `
 
     return NextResponse.json({ success: true })

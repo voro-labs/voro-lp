@@ -1,6 +1,6 @@
 "use client"
 
-import ProposalView from "@/components/layout/landing/proposal-view"
+import ProposalView from "@/components/layout/proposal-view"
 import { ProposalDto } from "@/types/DTOs/proposalDto.interface"
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
@@ -26,7 +26,7 @@ export default function ProposalPage() {
 
     async function fetchProposal() {
       try {
-        const response = await fetch(`/api/proposals/${proposalNumber}`)
+        const response = await fetch(`/api/proposal/${proposalNumber}`)
         const data = await response.json()
         setProposal(data.proposal)
       } catch (err) {

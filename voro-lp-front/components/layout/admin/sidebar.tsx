@@ -83,7 +83,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 href="/admin/dashboard"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                  pointer-events-none opacity-50
                   ${
                     isActive("/admin/dashboard")
                       ? "bg-blue-100 text-blue-700"

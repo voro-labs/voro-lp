@@ -104,7 +104,7 @@ export interface CreateProposalDto {
 export interface ProposalListItemDto {
   id: number
   proposalNumber: string
-  status: string
+  status: ProposalStatusEnum
   clientName: string
   clientCompany?: string
   clientEmail: string

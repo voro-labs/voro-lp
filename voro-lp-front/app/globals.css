@@ -123,4 +123,46 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .voro-scroll {
+    @apply overflow-x-auto whitespace-nowrap;
+  }
+
+  .voro-scroll::-webkit-scrollbar {
+    height: 4px;
+    @apply w-2;
+  }
+
+  .voro-scroll::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .voro-scroll::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  .voro-scroll::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+
+  .voro-scroll-y {
+    @apply flex-1 min-h-0 overflow-y-auto p-6 space-y-4;
+  }
+
+  .voro-scroll-y::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  .voro-scroll-y::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .voro-scroll-y::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  .voro-scroll-y::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+
 }

@@ -19,10 +19,65 @@ interface ProposalViewProps {
 
 export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) {
   const [countryCode, setCountryCode] = useState("BR")
+  const [proposalState, setProposalState] = useState(proposal)
+  const [proposalPdfGenerating, setProposalPdfGenerating] = useState(false)
+
   const currentMask = phoneMasks[countryCode]
 
-  const handleDownloadPDF = () => {
-    alert("Funcionalidade de download PDF será implementada em breve!")
+  const handleDownloadPDF = async () => {
+    setProposalPdfGenerating(true)
+    const response = await fetch("/api/proposal/pdf", {
+      method: "POST",
+      body: JSON.stringify({ proposal: proposalState }),
+      headers: { "Content-Type": "application/json" }
+    })
+
+    const blob = await response.blob()
+
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    link.download = `proposta_${proposalState.proposal.number}.pdf`
+    link.click()
+    setProposalPdfGenerating(false)
+  }
+
+  const handleApproveProposal = async () => {
+    try {
+      const response = await fetch(`/api/proposal/${proposalState.proposal.number}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: ProposalStatusEnum.Approved }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setProposalState(data.proposal)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleRequestAdjustments = () => {
+    alert("Funcionalidade de solicitação de ajustes será implementada em breve!")
+  }
+
+  const getStatusText = (status: ProposalStatusEnum) => {
+    switch (status) {
+      case ProposalStatusEnum.Approved:
+        return "Aprovada"
+      case ProposalStatusEnum.Rejected:
+        return "Rejeitada"
+      case ProposalStatusEnum.Pending:
+        return "Pendente"
+      case ProposalStatusEnum.UnderReview:
+        return "Em Revisão"
+      case ProposalStatusEnum.OnHold:
+        return "Em Espera"
+      default:
+        return "Desconhecido"
+    }
   }
 
   const getStatusColor = (status: ProposalStatusEnum) => {
@@ -51,17 +106,19 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
               Voltar
             </Link>
             <div className="flex items-center gap-4">
-              <Badge variant="outline" className={getStatusColor(proposal.proposal.status)}>
-                {proposal.proposal.status}
+              <Badge variant="outline" className={getStatusColor(proposalState.proposal.status)}>
+                {getStatusText(proposalState.proposal.status)}
               </Badge>
-              <Button onClick={handleDownloadPDF} variant="outline" size="sm" className="gap-2 bg-transparent">
+              <Button onClick={handleDownloadPDF} variant="outline" size="sm" className="gap-2 bg-transparent" disabled={proposalPdfGenerating}>
                 <Download className="w-4 h-4" />
                 Baixar PDF
               </Button>
-              <Button size="sm" className="gap-2">
-                <Check className="w-4 h-4" />
-                Aprovar Proposta
-              </Button>
+              { proposalState.proposal.status === ProposalStatusEnum.Pending && (
+                <Button onClick={handleApproveProposal} size="sm" className="gap-2">
+                  <Check className="w-4 h-4" />
+                  Aprovar Proposta
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -78,13 +135,13 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
           <div className="flex items-start justify-between mb-6">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold mb-2">Proposta Comercial</h1>
-              <p className="text-muted-foreground">#{proposal.proposal.number}</p>
+              <p className="text-muted-foreground">#{proposalState.proposal.number}</p>
             </div>
             <div className="text-right">
               <div className="text-sm text-muted-foreground">Data de Emissão</div>
-              <div className="font-semibold">{new Date(proposal.proposal.date).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</div>
+              <div className="font-semibold">{new Date(proposalState.proposal.date).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</div>
               <div className="text-sm text-muted-foreground mt-2">Válida até</div>
-              <div className="font-semibold">{new Date(proposal.proposal.validUntil).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</div>
+              <div className="font-semibold">{new Date(proposalState.proposal.validUntil).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</div>
             </div>
           </div>
 
@@ -92,12 +149,12 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
           <Card className="p-6 bg-muted/50">
             <h2 className="text-lg font-semibold mb-4">Informações do Cliente</h2>
             <div className="grid md:grid-cols-2 gap-4">
-              {proposal.client.company && (
+              {proposalState.client.company && (
                 <div className="flex items-center gap-3">
                   <Building2 className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <div className="text-sm text-muted-foreground">Empresa</div>
-                    <div className="font-semibold">{proposal.client.company}</div>
+                    <div className="font-semibold">{proposalState.client.company}</div>
                   </div>
                 </div>
               )}
@@ -105,22 +162,22 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
                 <Mail className="w-5 h-5 text-muted-foreground" />
                 <div>
                   <div className="text-sm text-muted-foreground">Responsável</div>
-                  <div className="font-semibold">{proposal.client.name}</div>
+                  <div className="font-semibold">{proposalState.client.name}</div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-muted-foreground" />
                 <div>
                   <div className="text-sm text-muted-foreground">Email</div>
-                  <div className="font-semibold">{proposal.client.email}</div>
+                  <div className="font-semibold">{proposalState.client.email}</div>
                 </div>
               </div>
-              {proposal.client.phone && (
+              {proposalState.client.phone && (
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <div className="text-sm text-muted-foreground">Telefone</div>
-                    <div className="font-semibold">{proposal.client.phone}</div>
+                    <div className="font-semibold">{proposalState.client.phone}</div>
                   </div>
                 </div>
               )}
@@ -135,47 +192,47 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <Card className="p-8 mb-8">
-            {proposal.project.package && (
+            {proposalState.project.package && (
               <div className="flex items-center gap-2 mb-4">
-                <Badge className="text-sm">{proposal.project.package}</Badge>
+                <Badge className="text-sm">{proposalState.project.package}</Badge>
               </div>
             )}
-            <h2 className="text-2xl font-bold mb-4">{proposal.project.title}</h2>
-            {proposal.project.description && (
-              <p className="text-muted-foreground mb-6 leading-relaxed">{proposal.project.description}</p>
+            <h2 className="text-2xl font-bold mb-4">{proposalState.project.title}</h2>
+            {proposalState.project.description && (
+              <p className="text-muted-foreground mb-6 leading-relaxed">{proposalState.project.description}</p>
             )}
 
             <div className="grid md:grid-cols-3 gap-6 pt-6 border-t">
-              {proposal.project.duration && (
+              {proposalState.project.duration && (
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Clock className="w-5 h-5 text-primary" />
                   </div>
                   <div>
                     <div className="text-sm text-muted-foreground">Duração</div>
-                    <div className="font-semibold">{proposal.project.duration}</div>
+                    <div className="font-semibold">{proposalState.project.duration}</div>
                   </div>
                 </div>
               )}
-              {proposal.project.startDate && (
+              {proposalState.project.startDate && (
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Calendar className="w-5 h-5 text-primary" />
                   </div>
                   <div>
                     <div className="text-sm text-muted-foreground">Início Previsto</div>
-                    <div className="font-semibold">{new Date(proposal.project.startDate).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</div>
+                    <div className="font-semibold">{new Date(proposalState.project.startDate).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</div>
                   </div>
                 </div>
               )}
-              {proposal.project.deliveryDate && (
+              {proposalState.project.deliveryDate && (
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Calendar className="w-5 h-5 text-primary" />
                   </div>
                   <div>
                     <div className="text-sm text-muted-foreground">Entrega Prevista</div>
-                    <div className="font-semibold">{new Date(proposal.project.deliveryDate).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</div>
+                    <div className="font-semibold">{new Date(proposalState.project.deliveryDate).toLocaleDateString("pt-BR", { timeZone: "UTC" })}</div>
                   </div>
                 </div>
               )}
@@ -184,7 +241,7 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
         </motion.div>
 
         {/* Scope of Work */}
-        {proposal.scope.length > 0 && (
+        {proposalState.scope.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -193,7 +250,7 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
             <Card className="p-8 mb-8">
               <h2 className="text-2xl font-bold mb-6">Escopo do Projeto</h2>
               <div className="space-y-6">
-                {proposal.scope.map((section, index) => (
+                {proposalState.scope.map((section, index) => (
                   <div key={index} className="border-l-2 border-primary pl-6">
                     <h3 className="text-lg font-semibold mb-3">{section.category}</h3>
                     <ul className="space-y-2">
@@ -212,7 +269,7 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
         )}
 
         {/* Timeline */}
-        {proposal.timeline.length > 0 && (
+        {proposalState.timeline.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -221,9 +278,9 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
             <Card className="p-8 mb-8">
               <h2 className="text-2xl font-bold mb-6">Cronograma de Desenvolvimento</h2>
               <div className="space-y-6">
-                {proposal.timeline.map((phase, index) => (
+                {proposalState.timeline.map((phase, index) => (
                   <div key={index} className="relative pl-8 pb-6 last:pb-0">
-                    {index < proposal.timeline.length - 1 && (
+                    {index < proposalState.timeline.length - 1 && (
                       <div className="absolute left-[11px] top-8 bottom-0 w-0.5 bg-border" />
                     )}
                     <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold">
@@ -251,7 +308,7 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
         )}
 
         {/* Deliverables */}
-        {proposal.deliverables.length > 0 && (
+        {proposalState.deliverables.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -260,7 +317,7 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
             <Card className="p-8 mb-8">
               <h2 className="text-2xl font-bold mb-6">Entregáveis</h2>
               <div className="grid md:grid-cols-2 gap-3">
-                {proposal.deliverables.map((item, index) => (
+                {proposalState.deliverables.map((item, index) => (
                   <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
                     <Check className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                     <span>{item}</span>
@@ -284,51 +341,51 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
             </h2>
 
             <div className="space-y-4 mb-6">
-              {proposal.investment.development > 0 && (
+              {proposalState.investment.development > 0 && (
                 <div className="flex items-center justify-between py-3 border-b">
                   <span className="text-muted-foreground">Desenvolvimento</span>
                   <span className="font-semibold">
-                    {proposal.investment.currency} {proposal.investment.development.toLocaleString("pt-BR")}
+                    {proposalState.investment.currency} {proposalState.investment.development.toLocaleString("pt-BR")}
                   </span>
                 </div>
               )}
-              {proposal.investment.infrastructure > 0 && (
+              {proposalState.investment.infrastructure > 0 && (
                 <div className="flex items-center justify-between py-3 border-b">
                   <span className="text-muted-foreground">Infraestrutura</span>
                   <span className="font-semibold">
-                    {proposal.investment.currency} {proposal.investment.infrastructure.toLocaleString("pt-BR")}
+                    {proposalState.investment.currency} {proposalState.investment.infrastructure.toLocaleString("pt-BR")}
                   </span>
                 </div>
               )}
-              {proposal.investment.training > 0 && (
+              {proposalState.investment.training > 0 && (
                 <div className="flex items-center justify-between py-3 border-b">
                   <span className="text-muted-foreground">Treinamento</span>
                   <span className="font-semibold">
-                    {proposal.investment.currency} {proposal.investment.training.toLocaleString("pt-BR")}
+                    {proposalState.investment.currency} {proposalState.investment.training.toLocaleString("pt-BR")}
                   </span>
                 </div>
               )}
-              {proposal.investment.support > 0 && (
+              {proposalState.investment.support > 0 && (
                 <div className="flex items-center justify-between py-3 border-b">
                   <span className="text-muted-foreground">Suporte</span>
                   <span className="font-semibold">
-                    {proposal.investment.currency} {proposal.investment.support.toLocaleString("pt-BR")}
+                    {proposalState.investment.currency} {proposalState.investment.support.toLocaleString("pt-BR")}
                   </span>
                 </div>
               )}
               <div className="flex items-center justify-between py-4 text-xl font-bold">
                 <span>Total</span>
                 <span className="text-primary">
-                  {proposal.investment.currency} {proposal.investment.total.toLocaleString("pt-BR")}
+                  {proposalState.investment.currency} {proposalState.investment.total.toLocaleString("pt-BR")}
                 </span>
               </div>
             </div>
 
-            {proposal.investment.paymentTerms.length > 0 && (
+            {proposalState.investment.paymentTerms.length > 0 && (
               <div className="bg-card rounded-lg p-6">
                 <h3 className="font-semibold mb-4">Condições de Pagamento</h3>
                 <ul className="space-y-2">
-                  {proposal.investment.paymentTerms.map((term, index) => (
+                  {proposalState.investment.paymentTerms.map((term, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <Check className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                       <span className="text-sm">{term}</span>
@@ -341,21 +398,23 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
         </motion.div>
 
         {/* Footer Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="mt-8 flex flex-col sm:flex-row gap-4 items-center justify-center"
-        >
-          <Button size="lg" className="gap-2 min-w-[200px]">
-            <Check className="w-5 h-5" />
-            Aprovar Proposta
-          </Button>
-          <Button size="lg" variant="outline" className="gap-2 min-w-[200px] bg-transparent">
-            <Mail className="w-5 h-5" />
-            Solicitar Ajustes
-          </Button>
-        </motion.div>
+        { proposalState.proposal.status === ProposalStatusEnum.Pending && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="mt-8 flex flex-col sm:flex-row gap-4 items-center justify-center"
+          >
+            <Button onClick={handleApproveProposal} size="lg" className="gap-2 min-w-[200px]">
+              <Check className="w-5 h-5" />
+              Aprovar Proposta
+            </Button>
+            <Button onClick={handleRequestAdjustments} size="lg" variant="outline" className="gap-2 min-w-[200px] bg-transparent">
+              <Mail className="w-5 h-5" />
+              Solicitar Ajustes
+            </Button>
+          </motion.div>
+        )}
 
         {/* Footer Note */}
         <div className="mt-12 text-center text-sm text-muted-foreground">
