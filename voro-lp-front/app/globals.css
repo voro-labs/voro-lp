@@ -124,6 +124,21 @@
     @apply bg-background text-foreground;
   }
 
+  .nav-static {
+    position: static; 
+  }
+
+  .nav-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .voro-scroll {
     @apply overflow-x-auto whitespace-nowrap;
   }

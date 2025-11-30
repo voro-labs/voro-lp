@@ -13,6 +13,7 @@ import { ArrowLeft, Plus, Trash2, Loader2, User, FileText, DollarSign, ListCheck
 import type { CreateProposalDto, ProposalTimelinePhaseDto } from "@/types/DTOs/proposalDto.interface"
 import { DatePicker } from "@/components/ui/custom/date-picker"
 import { PhoneInput } from "@/components/ui/custom/phone-input"
+import { Loading } from "@/components/ui/custom/loading/loading"
 
 export default function NewProposalPage() {
   const router = useRouter()
@@ -229,13 +230,11 @@ export default function NewProposalPage() {
 
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-background p-2 md:p-8">
+      <Loading isLoading={loading} />
+      <div className="max-w-[95vw] md:max-w-3xl lg:max-w-4xl mx-auto px-2 md:px-4 space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.back()}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
           <div>
             <motion.h1
               className="text-2xl md:text-3xl font-bold"
@@ -249,7 +248,7 @@ export default function NewProposalPage() {
         </div>
 
         {/* Progress Steps */}
-        <div className="flex items-center justify-between overflow-x-auto pb-2">
+        <div className="flex items-center gap-4 md:justify-between overflow-x-auto pb-2 no-scrollbar">
           {steps.map((step, index) => (
             <button
               key={index}

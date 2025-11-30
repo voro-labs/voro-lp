@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Loader2, ArrowLeft, Mail, MailOpen, Trash2, Eye, User, Calendar, Globe, Inbox, RefreshCw, FileText } from "lucide-react"
 import { useLandingPageContact } from "@/hooks/use-landing-page-contact.hook"
 import { LandingPageContactDto } from "@/types/DTOs/landingPageContactDto.interface"
+import { Loading } from "@/components/ui/custom/loading/loading"
 
 export default function MessagesFromForm() {
   const [messages, setMessages] = useState<LandingPageContactDto[]>([])
@@ -65,23 +66,14 @@ export default function MessagesFromForm() {
 
   const unreadCount = messages.filter((m) => !m.isRead).length
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
+      <Loading isLoading={loading} />
       <div className="max-w-6xl mx-auto space-y-6">
+
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => router.push("/admin/dashboard")}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
+          <div className="flex items-center gap-4 w-full sm:w-auto">
             <div>
               <motion.h1
                 className="text-2xl md:text-3xl font-bold"
@@ -95,7 +87,12 @@ export default function MessagesFromForm() {
               </p>
             </div>
           </div>
-          <Button variant="outline" onClick={handleRefresh} disabled={refreshing}>
+          <Button
+            variant="outline"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="w-full sm:w-auto"
+          >
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshing ? "animate-spin" : ""}`} />
             Atualizar
           </Button>
@@ -104,7 +101,7 @@ export default function MessagesFromForm() {
         {/* Messages List */}
         {messages.length === 0 ? (
           <Card>
-            <CardContent className="flex flex-col items-center justify-center py-16">
+            <CardContent className="flex flex-col items-center justify-center py-16 text-center">
               <Inbox className="w-16 h-16 text-muted-foreground/50 mb-4" />
               <h3 className="text-lg font-medium text-muted-foreground">Nenhuma mensagem ainda</h3>
               <p className="text-sm text-muted-foreground/70">
@@ -130,7 +127,11 @@ export default function MessagesFromForm() {
                     onClick={() => handleView(message)}
                   >
                     <CardContent className="p-4 md:p-6">
+
+                      {/* MOBILE STACK */}
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+
+                        {/* User + message */}
                         <div className="flex items-start gap-4 flex-1">
                           <div className={`p-2 rounded-full ${!message.isRead ? "bg-primary/20" : "bg-muted"}`}>
                             {message.isRead ? (
@@ -139,6 +140,7 @@ export default function MessagesFromForm() {
                               <Mail className="w-5 h-5 text-primary" />
                             )}
                           </div>
+                          
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               <h3
@@ -152,14 +154,28 @@ export default function MessagesFromForm() {
                                 </Badge>
                               )}
                             </div>
-                            <p className="text-sm text-muted-foreground truncate">{message.email}</p>
-                            <p className="text-sm mt-1 line-clamp-2 text-foreground/80">{message.message}</p>
+
+                            {/* email ajustado para quebra correta */}
+                            <p className="text-sm text-muted-foreground break-all">
+                              {message.email}
+                            </p>
+
+                            {/* mensagem com clamp no mobile */}
+                            <p className="text-sm mt-1 line-clamp-3 md:line-clamp-2 text-foreground/80">
+                              {message.message}
+                            </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 md:flex-col md:items-end">
+
+                        {/* Date + actions */}
+                        <div className="flex items-center justify-between w-full md:w-auto">
+
+                          {/* Data (mobile left, desktop right) */}
                           <span className="text-xs text-muted-foreground">
-                            {new Date(`${message.createdAt}`).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
+                            {new Date(`${message.createdAt}`).toLocaleDateString("pt-BR")}
                           </span>
+
+                          {/* Ações — mobile compacta */}
                           <div className="flex gap-1">
                             <Button
                               variant="ghost"
@@ -185,6 +201,7 @@ export default function MessagesFromForm() {
                             </Button>
                           </div>
                         </div>
+
                       </div>
                     </CardContent>
                   </Card>
@@ -196,62 +213,78 @@ export default function MessagesFromForm() {
 
         {/* View Message Dialog */}
         <Dialog open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-full sm:max-w-2xl mx-2 sm:mx-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Mail className="w-5 h-5 text-primary" />
                 Detalhes da Mensagem
               </DialogTitle>
-              <DialogDescription>Mensagem recebida pelo formulário de contato</DialogDescription>
+              <DialogDescription className="hidden sm:block">
+                Mensagem recebida pelo formulário de contato
+              </DialogDescription>
             </DialogHeader>
+
             {selectedMessage && (
               <div className="space-y-4">
+
+                {/* Dados — viram lista em mobile */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                     <User className="w-5 h-5 text-primary" />
                     <div>
                       <p className="text-xs text-muted-foreground">Nome</p>
-                      <p className="font-medium">{selectedMessage.name}</p>
+                      <p className="font-medium break-all">{selectedMessage.name}</p>
                     </div>
                   </div>
+
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                     <Mail className="w-5 h-5 text-primary" />
                     <div>
                       <p className="text-xs text-muted-foreground">Email</p>
-                      <a href={`mailto:${selectedMessage.email}`} className="font-medium text-primary hover:underline">
+                      <a href={`mailto:${selectedMessage.email}`} className="font-medium text-primary hover:underline break-all">
                         {selectedMessage.email}
                       </a>
                     </div>
                   </div>
+
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                     <Calendar className="w-5 h-5 text-primary" />
                     <div>
                       <p className="text-xs text-muted-foreground">Data de Recebimento</p>
-                      <p className="font-medium">
+                      <p className="font-medium break-all">
                         {new Date(`${selectedMessage.receiveDate}`).toLocaleDateString("pt-BR", { timeZone: "UTC" })} às{" "}
-                        {new Date(`${selectedMessage.receiveDate}`).toLocaleTimeString("pt-BR", { timeZone: "UTC",})}
+                        {new Date(`${selectedMessage.receiveDate}`).toLocaleTimeString("pt-BR", { timeZone: "UTC"})}
                       </p>
                     </div>
                   </div>
+
                   {selectedMessage.ipAddress && (
                     <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
                       <Globe className="w-5 h-5 text-primary" />
                       <div>
                         <p className="text-xs text-muted-foreground">Endereço IP</p>
-                        <p className="font-medium">{selectedMessage.ipAddress}</p>
+                        <p className="font-medium break-all">{selectedMessage.ipAddress}</p>
                       </div>
                     </div>
                   )}
                 </div>
+
+                {/* Mensagem */}
                 <div className="p-4 rounded-lg bg-muted/50">
                   <p className="text-xs text-muted-foreground mb-2">Mensagem</p>
-                  <p className="whitespace-pre-wrap">{selectedMessage.message}</p>
+                  <p className="whitespace-pre-wrap break-words">
+                    {selectedMessage.message}
+                  </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full justify-end">
+
+                {/* Botões — full width no mobile */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+
                   <Button
                     variant="default"
                     onClick={() => handleCreateProposal(selectedMessage)}
-                    className="gap-2 col-span-1 sm:col-span-3"
+                    className="gap-2 w-full"
                   >
                     <FileText className="w-4 h-4" />
                     Criar Proposta Comercial
@@ -260,7 +293,7 @@ export default function MessagesFromForm() {
                   <Button
                     variant="outline"
                     onClick={() => markAsRead(selectedMessage.id, !selectedMessage.isRead)}
-                    className="gap-2 col-span-1 sm:col-span-2"
+                    className="gap-2 w-full"
                   >
                     {selectedMessage.isRead ? (
                       <>
@@ -281,31 +314,32 @@ export default function MessagesFromForm() {
                       setSelectedMessage(null)
                       setDeleteMessage(selectedMessage)
                     }}
-                    className="gap-2 col-span-1 sm:col-span-1"
+                    className="gap-2 w-full"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Excluir
                   </Button>
+
                 </div>
               </div>
             )}
           </DialogContent>
         </Dialog>
 
-        {/* Delete Confirmation Dialog */}
+        {/* Delete Confirmation */}
         <Dialog open={!!deleteMessage} onOpenChange={() => setDeleteMessage(null)}>
-          <DialogContent>
+          <DialogContent className="max-w-full sm:max-w-md mx-2 sm:mx-auto">
             <DialogHeader>
               <DialogTitle>Confirmar exclusão</DialogTitle>
               <DialogDescription>
-                Tem certeza que deseja excluir a mensagem de <strong>{deleteMessage?.name}</strong>? Esta ação não pode
-                ser desfeita.
+                Tem certeza que deseja excluir a mensagem de <strong>{deleteMessage?.name}</strong>?
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter>
+            <DialogFooter className="flex flex-col sm:flex-row gap-2">
               <Button
                 type="button"
                 variant="outline"
+                className="w-full"
                 onClick={() => setDeleteMessage(null)}
               >
                 Cancelar
@@ -313,13 +347,14 @@ export default function MessagesFromForm() {
               <Button 
                 type="button"
                 onClick={handleDelete}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 w-full"
               >
-                Salvar
+                Deletar
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
       </div>
     </div>
   )
