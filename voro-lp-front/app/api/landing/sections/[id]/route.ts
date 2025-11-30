@@ -6,7 +6,7 @@ export const sql = neon(process.env.NEON_DATABASE_URL!);
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params
-    const sectionId = Number(id)
+    const sectionId = id
     const body = await request.json()
 
     const updates: string[] = []
@@ -39,7 +39,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       SET ${updates.join(", ")}
       WHERE "Id" = $${i}
     `
-
+    
     await sql.query(sqlQuery, values)
 
     return NextResponse.json({ success: true })

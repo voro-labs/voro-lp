@@ -100,7 +100,7 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
       {/* Header */}
       <header className="border-b bg-card sticky top-0 z-50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-end">
             <div className="flex items-center gap-4">
               <Badge variant="outline" className={getStatusColor(proposalState.proposal.status)}>
                 {getStatusText(proposalState.proposal.status)}

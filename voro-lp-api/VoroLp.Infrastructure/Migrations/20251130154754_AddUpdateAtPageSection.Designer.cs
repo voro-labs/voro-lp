@@ -3,6 +3,7 @@ using System;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VoroLp.Infrastructure.Factories;
@@ -12,9 +13,11 @@ using VoroLp.Infrastructure.Factories;
 namespace VoroLp.Infrastructure.Migrations
 {
     [DbContext(typeof(JasmimDbContext))]
-    partial class JasmimDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251130154754_AddUpdateAtPageSection")]
+    partial class AddUpdateAtPageSection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -603,9 +606,6 @@ namespace VoroLp.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("IsRead")
                         .HasColumnType("boolean");
 
@@ -680,9 +680,6 @@ namespace VoroLp.Infrastructure.Migrations
 
                     b.Property<decimal>("InvestmentTraining")
                         .HasColumnType("numeric(12,2)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
 
                     b.Property<JsonDocument>("PaymentTerms")
                         .IsRequired()

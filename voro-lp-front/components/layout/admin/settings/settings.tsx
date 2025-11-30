@@ -97,17 +97,9 @@ export default function SettingsPage() {
     await updateSection(section.id, { isVisible: !section.isVisible })
   }
 
-  if (!config) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Configuração não encontrada. Execute o script SQL primeiro.</p>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
-      <Loading isLoading={loading}></Loading>
+      <Loading isLoading={!config || loading}></Loading>
       <div className="max-w-6xl mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
           <motion.div

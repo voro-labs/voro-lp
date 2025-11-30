@@ -8,6 +8,13 @@ import { ArrowRight } from "lucide-react"
 import Image from "next/image"
 
 export function Hero({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined }) {
+  const scrollToServices = () => {
+    const element = document.getElementById("services")
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   const scrollToContact = () => {
     const element = document.getElementById("contact")
     if (element) {
@@ -53,7 +60,7 @@ export function Hero({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined
                 Fale com a VoroLabs
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button onClick={scrollToContact} variant="outline" size="lg" className="text-base bg-transparent">
+              <Button onClick={scrollToServices} variant="outline" size="lg" className="text-base bg-transparent">
                 Ver Serviços
               </Button>
             </div>

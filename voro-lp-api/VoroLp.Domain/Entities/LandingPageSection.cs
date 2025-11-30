@@ -28,5 +28,7 @@ namespace VoroLp.Domain.Entities
         // Controle de exibição
         public bool IsVisible { get; set; } = true;
         public int Order { get; set; }
+
+        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     }
 }
