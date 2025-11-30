@@ -1,33 +1,40 @@
-import { NextResponse } from "next/server"
-import puppeteer from "puppeteer"
+import { NextResponse } from "next/server";
+import { chromium } from "playwright";
 
 export async function POST(req: Request) {
-  const { proposal } = await req.json()
+  const { proposal } = await req.json();
 
-  console.log(proposal)
+  console.log(proposal);
 
-  const browser = await puppeteer.launch()
-  const page = await browser.newPage()
+  const browser = await chromium.launch({
+    headless: true,
+  });
 
-  await page.setContent(renderProposalPdfTemplate(proposal), { waitUntil: "networkidle0" })
+  const page = await browser.newPage();
+
+  await page.setContent(renderProposalPdfTemplate(proposal), {
+    waitUntil: "networkidle",
+  });
 
   const pdf = await page.pdf({
     format: "A4",
     printBackground: true,
-    margin: { top: "20mm", bottom: "20mm" }
-  })
+    margin: {
+      top: "20mm",
+      bottom: "20mm",
+    },
+  });
 
-  await browser.close()
+  await browser.close();
 
   return new NextResponse(Buffer.from(pdf), {
     status: 200,
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="proposta.pdf"`
-    }
-  })
+      "Content-Disposition": `attachment; filename="proposta.pdf"`,
+    },
+  });
 }
-
 
 export function renderProposalPdfTemplate(p: any) {
   let templateHtml = `

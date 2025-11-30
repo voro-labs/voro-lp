@@ -14,29 +14,38 @@ export function Navbar({ isOpen, onMenuClick }: NavbarProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
+      setIsScrolled(window.scrollY > 0);
     }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [])
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 transition-all duration-300 lg:hidden ${
-        isScrolled || isMobileMenuOpen ? "bg-background/80 backdrop-blur-lg border-b border-border" : "bg-transparent"
-      } ${
-        isOpen ? "z-0" : "z-50"
-      }`}>
-      <div className="flex items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onMenuClick}
-            className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-          >
-            <Menu size={20} />
-          </button>
-          <span className="text-xl font-bold text-gray-900">VoroLabs</span>
+    <>
+      <nav
+        className={`${
+          isScrolled
+            ? "fixed top-0 left-0 right-0"
+            : "relative"
+        } transition-all duration-300 lg:hidden 
+        ${isScrolled || isMobileMenuOpen ? "bg-background/80 backdrop-blur-lg border-b border-border" : "bg-transparent"} 
+        ${isOpen ? "z-0" : "z-50"}`}
+      >
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onMenuClick}
+              className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+            >
+              <Menu size={20} />
+            </button>
+            <span className="text-xl font-bold text-gray-900">VoroLabs</span>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Spacer para evitar "conteúdo saltando" */}
+      {isScrolled && <div className="h-14" />}
+    </>
   )
 }

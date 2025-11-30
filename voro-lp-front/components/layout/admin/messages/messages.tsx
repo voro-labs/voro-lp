@@ -48,13 +48,6 @@ export default function Messages() {
     <div className="bg-background">
       <Loading isLoading={loading} />
 
-      {error && (
-        <ErrorPopup
-          message={error}
-          onClose={() => setError("")}
-        />
-      )}
-      
       <div className="flex min-h-screen">
         {/* 🔹 Lista de conversas */}
         <ConversationList

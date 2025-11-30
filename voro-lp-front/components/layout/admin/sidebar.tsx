@@ -42,7 +42,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       <aside
         className={`
         fixed inset-y-0 left-0 z-50 w-64 min-h-screen bg-background/80 backdrop-blur-lg border-b border-border shadow-lg transform transition-transform duration-300 ease-in-out
-        lg:translate-x-0 lg:static lg:inset-0 lg:z-auto
+        lg:translate-x-0 lg:relative lg:z-auto
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
       `}
       >
@@ -60,6 +60,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Navigation Menu */}
         <nav className="p-4 space-y-2">
           <Link
+            onClick={onClose}
             href="/"
             className={`
               flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
@@ -80,6 +81,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <h3 className="px-3 text-xs font-semibold text-white-500 uppercase tracking-wider">Área de administrador</h3>
               </div>
               <Link
+                onClick={onClose}
                 href="/admin/dashboard"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
@@ -94,6 +96,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 Dashboard
               </Link>
               <Link
+                onClick={onClose}
                 href="/admin/proposals/new"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
@@ -108,6 +111,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 Nova Proposta
               </Link>
               <Link
+                onClick={onClose}
                 href="/admin/messages"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
@@ -122,6 +126,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 Mensagens
               </Link>
               <Link
+                onClick={onClose}
                 href="/admin/messages/from-form"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
@@ -136,6 +141,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 Mensagens Via Formulário
               </Link>
               <Link
+                onClick={onClose}
                 href="/admin/reports"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
@@ -151,6 +157,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 Relatórios
               </Link>
               <Link
+                onClick={onClose}
                 href="/admin/settings"
                 className={`
                   flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
