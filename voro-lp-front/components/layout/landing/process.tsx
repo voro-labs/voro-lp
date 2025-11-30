@@ -1,7 +1,7 @@
 "use client"
 
 import { getLucideIcon } from "@/lib/utils"
-import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
+import { LandingPageSectionDto, ProcessMetaDataDto } from "@/types/DTOs/landingPageConfigDto.interface"
 import { motion } from "framer-motion"
 
 export function Process({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined }) {
@@ -22,7 +22,7 @@ export function Process({ lpConfig }: { lpConfig: LandingPageSectionDto | undefi
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
-          {lpConfig?.metaData.steps?.map((step: any, index: any) => {
+          {(lpConfig?.metaData as ProcessMetaDataDto)?.steps?.map((step: any, index: any) => {
             const Icon = getLucideIcon(step.icon)
             return (
               <motion.div
@@ -42,7 +42,7 @@ export function Process({ lpConfig }: { lpConfig: LandingPageSectionDto | undefi
                     <p className="text-muted-foreground leading-relaxed">{step.description}</p>
                   </div>
                 </div>
-                {index < lpConfig?.metaData.steps?.length - 1 && (
+                {index < (lpConfig?.metaData as ProcessMetaDataDto)?.steps?.length - 1 && (
                   <div className="hidden md:block absolute top-8 left-[60%] w-[80%] h-0.5 bg-linear-to-r from-primary to-transparent" />
                 )}
               </motion.div>

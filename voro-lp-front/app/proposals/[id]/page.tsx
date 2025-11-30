@@ -7,7 +7,6 @@ import { useParams } from "next/navigation"
 import { AlertCircle } from "lucide-react"
 import { Loading } from "@/components/ui/custom/loading/loading"
 import { useLandingPageConfig } from "@/hooks/use-landing-page-config.hook"
-import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
 
 export default function ProposalPage() {
   const params = useParams()

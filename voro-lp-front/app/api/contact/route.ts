@@ -18,6 +18,7 @@ export async function GET() {
         "IsRead" AS is_read,
         "CreatedAt" AS created_at
       FROM "LandingPageContacts"
+      WHERE "IsDeleted" = FALSE
       ORDER BY "ReceiveDate" DESC
     `
 
@@ -47,11 +48,13 @@ export async function PUT(req: Request) {
   try {
     const { id, isRead } = await req.json()
 
-    await sql`
+    const query = `
       UPDATE "LandingPageContacts"
-      SET "IsRead" = ${isRead}
-      WHERE "Id" = ${id}
+      SET "IsRead" = $1
+      WHERE "Id" = $2
     `
+
+    await sql.query(query, [isRead, id])
 
     return NextResponse.json({ success: true })
   } catch (error) {
@@ -64,10 +67,13 @@ export async function DELETE(req: Request) {
   try {
     const { id } = await req.json()
 
-    await sql`
-      DELETE FROM "LandingPageContacts"
-      WHERE "Id" = ${id}
+    const query = `
+      UPDATE "LandingPageContacts"
+      SET "IsDeleted" = $1
+      WHERE "Id" = $2
     `
+
+    await sql.query(query, [true, id])
 
     return NextResponse.json({ success: true })
   } catch (error) {
@@ -91,10 +97,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true }, { status: 200 });
     }
 
-    await sql`
-      INSERT INTO "LandingPageContacts" ("Id", "Name", "Email", "Message", "IpAddress", "ReceiveDate", "IsRead", "CreatedAt")
-      VALUES (${guid}, ${body.name}, ${body.email}, ${body.message}, ${ip}, ${receiveDate}, false, ${receiveDate})
-    `;
+    const query = `
+      INSERT INTO "LandingPageContacts"
+      ("Id", "Name", "Email", "Message", "IpAddress", "ReceiveDate", "IsRead", "CreatedAt")
+      VALUES ($1, $2, $3, $4, $5, $6, false, $7)
+    `
+
+    await sql.query(query, [
+      guid,
+      body.name,
+      body.email,
+      body.message,
+      ip,
+      receiveDate,
+      receiveDate,
+    ])
 
     return NextResponse.json({ success: true });
   } catch (error) {

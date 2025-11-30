@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AlertCircle, Mail, MessageCircle, Send } from "lucide-react"
-import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
+import { ContactMetaDataDto, LandingPageSectionDto } from "@/types/DTOs/landingPageConfigDto.interface"
 import { useLandingPageContact } from "@/hooks/use-landing-page-contact.hook"
 import { LandingPageContactDto } from "@/types/DTOs/landingPageContactDto.interface"
 import { Spinner } from "../../ui/custom/loading/spinner"
@@ -238,7 +238,7 @@ export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefi
             <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/50 transition-colors">
               <CardContent className="p-6">
                 <a
-                  href={`https://wa.me/${lpConfig?.metaData?.whatsapp}?text=Olá!%20Tenho%20interesse%20em%20criar%20um%20sistema%20com%20a%20VoroLabs.%20Podemos%20conversar%3F`}
+                  href={`https://wa.me/${(lpConfig?.metaData as ContactMetaDataDto)?.whatsapp}?text=Olá!%20Tenho%20interesse%20em%20criar%20um%20sistema%20com%20a%20VoroLabs.%20Podemos%20conversar%3F`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 group"
@@ -256,13 +256,13 @@ export function Contact({ lpConfig }: { lpConfig: LandingPageSectionDto | undefi
 
             <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:border-primary/50 transition-colors">
               <CardContent className="p-6">
-                <a href={`mailto:${lpConfig?.metaData?.email}`} className="flex items-center gap-4 group">
+                <a href={`mailto:${(lpConfig?.metaData as ContactMetaDataDto)?.email}`} className="flex items-center gap-4 group">
                   <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                     <Mail className="h-6 w-6 text-accent" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">E-mail</h3>
-                    <p className="text-muted-foreground">{lpConfig?.metaData?.email}</p>
+                    <p className="text-muted-foreground">{(lpConfig?.metaData as ContactMetaDataDto)?.email}</p>
                   </div>
                 </a>
               </CardContent>

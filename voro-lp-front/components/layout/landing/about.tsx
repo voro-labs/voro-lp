@@ -1,7 +1,7 @@
 "use client"
 
 import { HtmlRender } from "@/lib/utils"
-import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
+import { LandingPageSectionDto } from "@/types/DTOs/landingPageConfigDto.interface"
 import { motion } from "framer-motion"
 
 export function About({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined }) {

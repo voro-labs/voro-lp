@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
+import { LandingPageSectionDto, ServicesMetaDataDto } from "@/types/DTOs/landingPageConfigDto.interface"
 import { getLucideIcon } from "@/lib/utils"
 
 export function Services({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined }) {
@@ -23,7 +23,7 @@ export function Services({ lpConfig }: { lpConfig: LandingPageSectionDto | undef
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {lpConfig?.metaData?.services?.map((service: any, index: any) => {
+          {(lpConfig?.metaData as ServicesMetaDataDto)?.services?.map((service: any, index: any) => {
             const Icon = getLucideIcon(service.icon)
             return (
               <motion.div

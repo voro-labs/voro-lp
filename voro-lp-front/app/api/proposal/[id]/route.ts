@@ -43,6 +43,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         "UpdatedAt" AS updated_at
       FROM "LandingPageProposals" 
       WHERE "ProposalNumber" = ${proposalNumber}
+      AND "IsDeleted" = FALSE
     `
 
     if (result.length === 0) {
@@ -109,11 +110,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     const { status } = await request.json()
 
-    await sql`
-      UPDATE "LandingPageProposals" 
-      SET "Status" = ${status}, "UpdatedAt" = CURRENT_TIMESTAMP 
-      WHERE "ProposalNumber" = ${proposalNumber}
+    const query = `
+      UPDATE "LandingPageProposals"
+      SET "Status" = $1, "UpdatedAt" = CURRENT_TIMESTAMP
+      WHERE "ProposalNumber" = $2
     `
+
+    await sql.query(query, [status, proposalNumber])
 
     return NextResponse.json({ success: true })
   } catch (error) {

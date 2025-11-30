@@ -9,6 +9,7 @@
         public string IpAddress { get; set; } = string.Empty;
         public DateTimeOffset ReceiveDate { get; set; } = DateTimeOffset.UtcNow;
         public bool IsRead { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     }
 }

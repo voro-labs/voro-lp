@@ -87,6 +87,8 @@ namespace VoroLp.Domain.Entities
         public Guid? ContactId { get; set; }
         public LandingPageContact? Contact { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
         // timestamps
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;

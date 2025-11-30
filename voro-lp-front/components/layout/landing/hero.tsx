@@ -2,12 +2,19 @@
 
 import { Button } from "@/components/ui/button"
 import { HtmlRender } from "@/lib/utils"
-import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
+import { HeroMetaDataDto, LandingPageSectionDto } from "@/types/DTOs/landingPageConfigDto.interface"
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import Image from "next/image"
 
 export function Hero({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined }) {
+  const scrollToServices = () => {
+    const element = document.getElementById("services")
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   const scrollToContact = () => {
     const element = document.getElementById("contact")
     if (element) {
@@ -45,7 +52,7 @@ export function Hero({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined
                 para o seu negócio
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed text-pretty">
-                {lpConfig?.metaData.subtitle}
+                {(lpConfig?.metaData as HeroMetaDataDto)?.subtitle}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -53,7 +60,7 @@ export function Hero({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined
                 Fale com a VoroLabs
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button onClick={scrollToContact} variant="outline" size="lg" className="text-base bg-transparent">
+              <Button onClick={scrollToServices} variant="outline" size="lg" className="text-base bg-transparent">
                 Ver Serviços
               </Button>
             </div>

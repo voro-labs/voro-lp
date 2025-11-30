@@ -64,6 +64,14 @@ export default function MessagesFromForm() {
     router.push(`/admin/proposals/new?${params.toString()}`)
   }
 
+  const markMessageAsRead = async (id: string, isRead: boolean) => {
+    await markAsRead(id, isRead)
+    setMessages(messages.map((m) => (m.id === id ? { ...m, isRead } : m)))
+    setSelectedMessage(prev =>
+      prev ? { ...prev, isRead } : prev
+    )
+  }
+
   const unreadCount = messages.filter((m) => !m.isRead).length
 
   return (
@@ -273,7 +281,7 @@ export default function MessagesFromForm() {
                 {/* Mensagem */}
                 <div className="p-4 rounded-lg bg-muted/50">
                   <p className="text-xs text-muted-foreground mb-2">Mensagem</p>
-                  <p className="whitespace-pre-wrap break-words">
+                  <p className="whitespace-pre-wrap wrap-break-word">
                     {selectedMessage.message}
                   </p>
                 </div>
@@ -292,7 +300,7 @@ export default function MessagesFromForm() {
 
                   <Button
                     variant="outline"
-                    onClick={() => markAsRead(selectedMessage.id, !selectedMessage.isRead)}
+                    onClick={() => markMessageAsRead(selectedMessage.id, !selectedMessage.isRead)}
                     className="gap-2 w-full"
                   >
                     {selectedMessage.isRead ? (
@@ -335,11 +343,11 @@ export default function MessagesFromForm() {
                 Tem certeza que deseja excluir a mensagem de <strong>{deleteMessage?.name}</strong>?
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <DialogFooter className="flex flex-col sm:flex-row sm:justify-end gap-2">
               <Button
                 type="button"
                 variant="outline"
-                className="w-full"
+                className="w-full sm:w-auto"
                 onClick={() => setDeleteMessage(null)}
               >
                 Cancelar
@@ -347,7 +355,7 @@ export default function MessagesFromForm() {
               <Button 
                 type="button"
                 onClick={handleDelete}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 w-full"
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90 w-full sm:w-auto"
               >
                 Deletar
               </Button>

@@ -1,4 +1,4 @@
-import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
+import { FooterMetaDataDto, LandingPageSectionDto } from "@/types/DTOs/landingPageConfigDto.interface"
 import { Github, Instagram, Linkedin } from "lucide-react"
 
 export function Footer({ lpConfig }: { lpConfig: LandingPageSectionDto | undefined }) {
@@ -15,7 +15,7 @@ export function Footer({ lpConfig }: { lpConfig: LandingPageSectionDto | undefin
 
           <div className="flex items-center gap-4">
             <a
-              href={lpConfig?.metaData?.linkedin}
+              href={(lpConfig?.metaData as FooterMetaDataDto)?.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="w-10 h-10 rounded-full bg-secondary hover:bg-primary/20 flex items-center justify-center transition-colors"
@@ -24,7 +24,7 @@ export function Footer({ lpConfig }: { lpConfig: LandingPageSectionDto | undefin
               <Linkedin className="h-5 w-5" />
             </a>
             <a
-              href={lpConfig?.metaData?.instagram}
+              href={(lpConfig?.metaData as FooterMetaDataDto)?.instagram}
               target="_blank"
               rel="noopener noreferrer"
               className="w-10 h-10 rounded-full bg-secondary hover:bg-accent/20 flex items-center justify-center transition-colors"
@@ -33,7 +33,7 @@ export function Footer({ lpConfig }: { lpConfig: LandingPageSectionDto | undefin
               <Instagram className="h-5 w-5" />
             </a>
             <a
-              href={lpConfig?.metaData?.github}
+              href={(lpConfig?.metaData as FooterMetaDataDto)?.github}
               target="_blank"
               rel="noopener noreferrer"
               className="w-10 h-10 rounded-full bg-secondary hover:bg-primary/20 flex items-center justify-center transition-colors"

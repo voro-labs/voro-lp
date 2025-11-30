@@ -7,7 +7,7 @@ import { ArrowLeft, Download, Check, Calendar, Clock, DollarSign, Mail, Phone, B
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ProposalDto } from "@/types/DTOs/proposalDto.interface"
-import { LandingPageSectionDto } from "@/types/DTOs/landingPageSectionDto.interface"
+import { ContactMetaDataDto, LandingPageSectionDto } from "@/types/DTOs/landingPageConfigDto.interface"
 import { useState } from "react"
 import { applyMask, phoneMasks } from "@/lib/mask-utils"
 import { ProposalStatusEnum } from "@/types/Enums/proposalStatusEnum.enum"
@@ -100,11 +100,7 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
       {/* Header */}
       <header className="border-b bg-card sticky top-0 z-50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 text-sm hover:text-primary transition-colors">
-              <ArrowLeft className="w-4 h-4" />
-              Voltar
-            </Link>
+          <div className="flex items-center justify-end">
             <div className="flex items-center gap-4">
               <Badge variant="outline" className={getStatusColor(proposalState.proposal.status)}>
                 {getStatusText(proposalState.proposal.status)}
@@ -422,12 +418,12 @@ export default function ProposalView({ proposal, lpConfig }: ProposalViewProps) 
             Esta proposta é válida até {new Date(`${proposal.proposal.validUntil}`).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}.
             <br />
             Dúvidas? Entre em contato através do email{" "}
-            <a href={`mailto:${lpConfig?.metaData?.email}`} className="text-primary hover:underline">
-              {lpConfig?.metaData?.email}
+            <a href={`mailto:${(lpConfig?.metaData as ContactMetaDataDto)?.email}`} className="text-primary hover:underline">
+              {(lpConfig?.metaData as ContactMetaDataDto)?.email}
             </a>{" "}
             ou telefone{" "}
-            <a href={`tel:+${lpConfig?.metaData?.whatsapp}`} className="text-primary hover:underline">
-              {applyMask(`${lpConfig?.metaData?.whatsapp.slice(2)}`, currentMask.mask)}
+            <a href={`tel:+${(lpConfig?.metaData as ContactMetaDataDto)?.whatsapp}`} className="text-primary hover:underline">
+              {applyMask(`${(lpConfig?.metaData as ContactMetaDataDto)?.whatsapp.slice(2)}`, currentMask.mask)}
             </a>
           </p>
         </div>

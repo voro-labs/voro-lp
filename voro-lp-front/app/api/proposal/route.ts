@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
         "CreatedAt" AS created_at,
         "UpdatedAt" AS updated_at
       FROM "LandingPageProposals" 
+      WHERE "IsDeleted" = FALSE
       ORDER BY "CreatedAt" DESC
     `
 
@@ -82,7 +83,9 @@ export async function POST(request: NextRequest) {
       (data.investmentTraining || 0) +
       (data.investmentSupport || 0)
 
-    const result = await sql`
+    const now = new Date().toISOString()
+
+    const query = `
       INSERT INTO "LandingPageProposals" (
         "Id",
         "ProposalNumber",
@@ -112,38 +115,50 @@ export async function POST(request: NextRequest) {
         "PaymentTerms",
         "ContactId",
         "Status"
-      ) VALUES (
-        ${guid},
-        ${proposalNumber},
-        ${data.clientName},
-        ${data.clientCompany || ''},
-        ${data.clientEmail},
-        ${data.clientPhone || ''},
-        ${data.validUntil},
-        ${data.projectTitle},
-        ${data.projectDescription || null},
-        ${data.projectPackage || null},
-        ${data.projectDuration || null},
-        ${data.projectStartDate || null},
-        ${data.projectDeliveryDate || null},
-        ${new Date().toISOString()},
-        ${new Date().toISOString()},
-        ${new Date().toISOString()},
-        ${JSON.stringify(data.scope || [])},
-        ${JSON.stringify(data.timeline || [])},
-        ${JSON.stringify(data.deliverables || [])},
-        ${data.investmentDevelopment || 0},
-        ${data.investmentInfrastructure || 0},
-        ${data.investmentTraining || 0},
-        ${data.investmentSupport || 0},
-        ${total},
-        ${data.investmentCurrency || "R$"},
-        ${JSON.stringify(data.paymentTerms || [])},
-        ${data.contactId || null},
-        ${ProposalStatusEnum.Pending}
+      )
+      VALUES (
+        $1,  $2,  $3,  $4,  $5,  $6,  $7,
+        $8,  $9,  $10, $11, $12, $13,
+        $14, $15, $16, $17, $18, $19,
+        $20, $21, $22, $23, $24, $25,
+        $26, $27, $28
       )
       RETURNING "Id", "ProposalNumber"
     `
+
+    const params = [
+      guid,
+      proposalNumber,
+      data.clientName,
+      data.clientCompany || "",
+      data.clientEmail,
+      data.clientPhone || "",
+      data.validUntil,
+      data.projectTitle,
+      data.projectDescription || null,
+      data.projectPackage || null,
+      data.projectDuration || null,
+      data.projectStartDate || null,
+      data.projectDeliveryDate || null,
+      now,  // ProposalDate
+      now,  // CreatedAt
+      now,  // UpdatedAt
+      JSON.stringify(data.scope || []),
+      JSON.stringify(data.timeline || []),
+      JSON.stringify(data.deliverables || []),
+      data.investmentDevelopment || 0,
+      data.investmentInfrastructure || 0,
+      data.investmentTraining || 0,
+      data.investmentSupport || 0,
+      total,
+      data.investmentCurrency || "R$",
+      JSON.stringify(data.paymentTerms || []),
+      data.contactId || null,
+      ProposalStatusEnum.Pending
+    ]
+
+    const result = await sql.query(query, params)
+
 
     return NextResponse.json({
       success: true,
@@ -161,7 +176,14 @@ export async function DELETE(request: NextRequest) {
   try {
     const { id } = await request.json()
 
-    await sql`DELETE FROM "LandingPageProposals" WHERE "Id" = ${id}`
+    const query = `
+      UPDATE "LandingPageProposals"
+      SET "IsDeleted" = $1,
+          "UpdatedAt" = CURRENT_TIMESTAMP
+      WHERE "Id" = $2
+    `
+
+    await sql.query(query, [true, id])
 
     return NextResponse.json({ success: true })
   } catch (error) {
