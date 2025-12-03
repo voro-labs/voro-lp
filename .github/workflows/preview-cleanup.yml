@@ -14,8 +14,8 @@ jobs:
       - name: Delete Fly preview app
         run: |
           APP_NAME="${{ github.event.repository.name }}-pr-${{ github.event.pull_request.number }}"
-          if flyctl apps list | grep -q "$APP_NAME"; then
-            flyctl apps destroy $APP_NAME --yes
+          if flyctl apps list --org "${{ secrets.FLY_ORG }}" | grep -q "$APP_NAME"; then
+            flyctl apps destroy $APP_NAME --yes --org "${{ secrets.FLY_ORG }}"
           else
             echo "App $APP_NAME não existe — nada para apagar."
           fi
